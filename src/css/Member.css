@@ -1,0 +1,117 @@
+/* Container and Header */
+.member-list-container {
+  background-color: #1e293b; /* Dark slate background */
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  color: #f8fafc;
+}
+
+.btn-add {
+  background-color: #6366f1; /* Indigo */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-weight: 600;
+}
+
+.btn-add:hover {
+  background-color: #4f46e5;
+}
+
+/* Add Member Form */
+.member-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  background: #334155;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.member-form input, 
+.member-form select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #475569;
+  background: #1e293b;
+  color: white;
+}
+
+.member-form button {
+  background-color: #10b981; /* Emerald Green */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Role Badges */
+.badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.badge.manager {
+  background-color: rgba(56, 189, 248, 0.2); /* Light Blue */
+  color: #38bdf8;
+  border: 1px solid #38bdf8;
+}
+
+.badge.chef {
+  background-color: rgba(251, 191, 36, 0.2); /* Amber/Orange */
+  color: #fbbf24;
+  border: 1px solid #fbbf24;
+}
+
+/* Table Styling */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.admin-table th {
+  text-align: left;
+  background-color: #0f172a;
+  padding: 15px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.admin-table td {
+  padding: 15px;
+  border-bottom: 1px solid #334155;
+  color: #e2e8f0;
+}
+
+.btn-delete {
+  background-color: transparent;
+  color: #f43f5e; /* Rose/Red */
+  border: 1px solid #f43f5e;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-delete:hover {
+  background-color: #f43f5e;
+  color: white;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

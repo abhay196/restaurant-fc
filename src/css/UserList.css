@@ -1,0 +1,22 @@
+.user-list-container {
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-table th,
+.user-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.user-table th {
+  background-color: #222;
+  color: white;
+  text-align: left;
+}

@@ -1,0 +1,106 @@
+.restaurant-add-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 50px auto;
+  background: #ffffff;
+  padding: 40px 45px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.restaurant-add-container:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.form-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.error-message {
+  color: #e63946;
+  background: #ffe5e5;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.restaurant-form input,
+.restaurant-form select,
+.restaurant-form textarea {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  background: #fdfdfd;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.restaurant-form input:focus,
+.restaurant-form select:focus,
+.restaurant-form textarea:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+  outline: none;
+}
+
+.restaurant-form textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.form-inline-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.form-inline-group select,
+.form-inline-group input[type="file"] {
+  flex: 1;
+  min-width: 180px;
+}
+
+.submit-btn {
+  width: 100%;
+  background-color: #28a745;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+  .restaurant-add-container {
+    padding: 25px;
+  }
+
+  .form-inline-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-inline-group select,
+  .form-inline-group input[type="file"] {
+    width: 100%;
+  }
+}

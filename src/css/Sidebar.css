@@ -1,0 +1,109 @@
+/* --- Sidebar Container --- */
+.sidebar-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #1e1e2f;
+  transition: width 0.3s ease;
+  width: 240px;
+  overflow: hidden;
+}
+
+/* --- Closed State --- */
+.sidebar-container.closed {
+  width: 70px; /* smaller width for icons only */
+}
+
+/* --- Sidebar Inner --- */
+.sidebar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.logo {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 20px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.3s ease;
+  color: white;
+}
+
+/* Hide logo text when closed */
+.sidebar-container.closed .logo {
+  opacity: 0;
+}
+
+/* --- Menu List --- */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin: 10px 0;
+}
+
+.sidebar a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background 0.2s, padding 0.3s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar a:hover {
+  background-color: #33334d;
+}
+
+.sidebar li.active a {
+  background-color: #4a4a6a;
+}
+
+/* Hide link text smoothly when closed */
+.sidebar-container.closed a {
+  justify-content: center;
+  padding: 10px;
+}
+
+.sidebar-container.closed a span {
+  display: none;
+}
+
+/* --- Toggle Button --- */
+.toggle-btn {
+  position: absolute;
+  top: 33px;
+  right: 8px;
+  background: #5353e8;
+  color: white;
+  border: 2px solid #33334d;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: right 0.3s ease, transform 0.3s ease;
+}
+
+/* Adjust button position when closed */
+.sidebar-container.closed .toggle-btn {
+  right: 20px;
+  /* transform: rotate(180deg); */
+}
