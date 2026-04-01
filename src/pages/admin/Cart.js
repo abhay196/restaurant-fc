@@ -39,7 +39,7 @@ export default function Cart() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch("http://127.0.0.1:8000/api/cart", {
+      const response = await fetch("{process.env.REACT_APP_API_URL}/api/cart", {
         headers: {
           Accept: "application/json",
           Authorization: `Bearer ${token}`,

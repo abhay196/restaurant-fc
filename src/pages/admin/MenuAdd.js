@@ -29,7 +29,7 @@ export default function MenuAdd() {
         setLoading(true);
         const token = localStorage.getItem("token");
 
-        const response = await fetch(`http://127.0.0.1:8000/api/restaurants`, {
+        const response = await fetch(`{process.env.REACT_APP_API_URL}/api/restaurants`, {
           headers: {
             Accept: "application/json",
             Authorization: `Bearer ${token}`,
@@ -70,7 +70,7 @@ export default function MenuAdd() {
             setLoading(true);
             const token = localStorage.getItem("token");
   
-            const response = await fetch(`http://127.0.0.1:8000/api/menu_items/show/${id}`, {
+            const response = await fetch(`{process.env.REACT_APP_API_URL}/api/menu_items/show/${id}`, {
               headers: {
                 Accept: "application/json",
                 Authorization: `Bearer ${token}`,
@@ -123,8 +123,8 @@ export default function MenuAdd() {
       const token = localStorage.getItem("token");
 
       const url = isEditMode
-        ? `http://127.0.0.1:8000/api/menu_items/edit/${id}`
-        : "http://127.0.0.1:8000/api/menu_items/create";
+        ? `{process.env.REACT_APP_API_URL}/api/menu_items/edit/${id}`
+        : "{process.env.REACT_APP_API_URL}/api/menu_items/create";
 
       const method = isEditMode ? "POST" : "POST"; // If your backend uses PUT/PATCH, update accordingly
 

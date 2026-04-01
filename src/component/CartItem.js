@@ -5,7 +5,7 @@ export default function CartItem({ item }) {
    return (
     <div className="cart-item">
       <img
-        src={`http://127.0.0.1:8000/storage/${item.image}`}
+        src={`{process.env.REACT_APP_API_URL}/storage/${item.image}`}
         alt={item.item_name}
         className="item-img"
       />

@@ -22,7 +22,7 @@ export default function MemberList() {
   }, []);
 
   const fetchMembers = async () => {
-    const res = await fetch("http://127.0.0.1:8000/api/members", {
+    const res = await fetch("{process.env.REACT_APP_API_URL}/api/members", {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await res.json();
@@ -30,7 +30,7 @@ export default function MemberList() {
   };
 
   const fetchRestaurants = async () => {
-    const res = await fetch("http://127.0.0.1:8000/api/restaurants", {
+    const res = await fetch("{process.env.REACT_APP_API_URL}/api/restaurants", {
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await res.json();
@@ -40,7 +40,7 @@ export default function MemberList() {
 
   const handleAddMember = async (e) => {
     e.preventDefault();
-    const res = await fetch("http://127.0.0.1:8000/api/members/store", {
+    const res = await fetch("{process.env.REACT_APP_API_URL}/api/members/store", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export default function MemberList() {
 
   const deleteMember = async (id) => {
     if (window.confirm("Are you sure you want to remove this staff member?")) {
-      await fetch(`http://127.0.0.1:8000/api/members/${id}`, {
+      await fetch(`{process.env.REACT_APP_API_URL}/api/members/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });

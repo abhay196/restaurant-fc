@@ -28,7 +28,7 @@ export default function Navbar() {
 
     setLoadingCount(true);
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/cart/count", 
+      const res = await axios.post("{process.env.REACT_APP_API_URL}/api/cart/count", 
         {},
         {   
           headers: {
