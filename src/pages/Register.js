@@ -1,6 +1,6 @@
 // src/pages/Register.js
 import React, { useState } from "react";
-import "../css/Register.css";
+import "../css/Register.css"; // Ensure this matches the CSS below
 import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
@@ -13,23 +13,21 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(""); 
 
-    setError(""); // 🆕 Clear previous errors
-
-    // 🆕 Check if passwords match
     if (password !== passwordConfirmation) {
       setError("Passwords do not match.");
       return;
     }
 
     try {
-      const response = await fetch("{process.env.REACT_APP_API_URL}/api/register", {
+      // FIX: Added backticks and ${} for the environment variable
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        // 🆕 Send password_confirmation to the backend
         body: JSON.stringify({ name, email, password, password_confirmation: passwordConfirmation }),
       });
 
@@ -39,25 +37,25 @@ function Register() {
         if (data.token) {
           localStorage.setItem("token", data.token);
         }
-        navigate("/users");
+        navigate("/login");
       } else {
-        // 🆕 More specific error messages
         const errorMessage = data.errors ? Object.values(data.errors).flat().join(", ") : data.message;
-        setError(errorMessage || "Registration failed. Please try again.");
+        setError(errorMessage || "Registration failed.");
       }
     } catch (err) {
-      setError("An unexpected error occurred. Please try again later.");
+      setError("An unexpected error occurred.");
     }
   };
 
   return (
-    <div className="register-container">
+    /* Changed class to 'container' to match the Login layout */
+    <div className="auth-page-wrapper">
+    <div className="container"> 
       <h2>Register</h2>
       {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleSubmit}>
         <input
           type="email"
-          name="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -65,7 +63,6 @@ function Register() {
         />
         <input
           type="text"
-          name="name"
           placeholder="Username"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -73,17 +70,15 @@ function Register() {
         />
         <input
           type="password"
-          name="password"
           placeholder="Password"
-          value={password} // 🆕 Added value prop
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
         <input
           type="password"
-          name="password_confirmation"
           placeholder="Confirm Password"
-          value={passwordConfirmation} // 🆕 Added value and onChange handler
+          value={passwordConfirmation}
           onChange={(e) => setPasswordConfirmation(e.target.value)}
           required
         />
@@ -94,6 +89,7 @@ function Register() {
           Already have an account? <Link to="/login">Login</Link>
         </p>
       </div>
+    </div>
     </div>
   );
 }

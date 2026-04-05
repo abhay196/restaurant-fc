@@ -9,13 +9,13 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   
-  const { login } = useContext(AuthContext);
+  const { login, user } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("{process.env.REACT_APP_API_URL}/api/login", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,8 +32,13 @@ function Login() {
         if (data.token && data.user) {
           login(data.token, data.user); 
           
-          // Redirect to admin panel since roles are now active
-          navigate("/admin"); 
+          if (data.user.role !== 'customer') {
+            console.log("Redirecting to Admin:", data.user.role);
+            navigate("/admin");
+          } else {
+            console.log("Redirecting to Home:", data.user.role);
+            navigate("/"); 
+          } 
         } else {
           setError("Invalid response from server");
         }
@@ -46,6 +51,7 @@ function Login() {
   };
 
   return (
+    <div className="auth-page-wrapper">
     <div className="login-container">
       <h2>Login</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
@@ -68,6 +74,7 @@ function Login() {
       </form>
       <div className="footer">
         <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
+      </div>
       </div>
     </div>
   );

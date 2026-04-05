@@ -15,7 +15,7 @@ export default function RestaurantList() {
   const fetchRestaurants = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("{process.env.REACT_APP_API_URL}/api/restaurants", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/restaurants`, {
         headers: {
           Accept: "application/json",
           Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ export default function RestaurantList() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch(`{process.env.REACT_APP_API_URL}/api/restaurants/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/restaurants/${id}`, {
         method: "DELETE",
         headers: {
           Accept: "application/json",
@@ -107,7 +107,7 @@ export default function RestaurantList() {
                   {/* Better Image handling with aspect ratio and fallback */}
                   {restaurant.image ? (
                     <img 
-                      src={`{process.env.REACT_APP_API_URL}/storage/${restaurant.image}`} 
+                      src={`${process.env.REACT_APP_API_URL}/storage/${restaurant.image}`} 
                       alt={restaurant.name} 
                       className="restaurant-image" // New class for image styling
                     />

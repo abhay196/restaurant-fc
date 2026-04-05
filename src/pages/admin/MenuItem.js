@@ -14,7 +14,7 @@ export default function MenuList() {
       setLoading(true);
       const token = localStorage.getItem("token");
 
-      const response = await fetch("{process.env.REACT_APP_API_URL}/api/menu_items", {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/menu_items`, {
         headers: {
           Accept: "application/json",
           Authorization: `Bearer ${token}`,
@@ -111,7 +111,7 @@ export default function MenuList() {
                 <td>
                   {menu.image ? (
                     <img 
-                      src={`{process.env.REACT_APP_API_URL}/storage/${menu.image}`} 
+                      src={`${process.env.REACT_APP_API_URL}/storage/${menu.image}`} 
                       alt={menu.item_name} 
                       className="restaurant-image" // New class for image styling
                     />

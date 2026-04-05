@@ -62,7 +62,7 @@ export default function RestaurantCard({ searchTerm = "" }) { // Default to empt
           >
             {restaurant.image ? (
               <img 
-                src={`{process.env.REACT_APP_API_URL}/storage/${restaurant.image}`} 
+                src={`${process.env.REACT_APP_API_URL}/storage/${restaurant.image}`} 
                 alt={restaurant.name} 
                 className="restaurant-image"
               />

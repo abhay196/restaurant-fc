@@ -11,7 +11,7 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   // Get token (and logout if available) from AuthContext
-  const { token, logout } = useContext(AuthContext || {});
+  const { token, logout, user } = useContext(AuthContext || {});
 
   // Local state for cart count + loading
   const [count, setCount] = useState(0);
@@ -85,11 +85,11 @@ export default function Navbar() {
           <Link to="/contact">Contact</Link>
         </li>
 
-        {/* {token && (
-          <li className={location.pathname === "/dashboard" ? "active" : ""}>
+        {token && user?.role !== 'customer' && (
+          <li className={location.pathname === "/admin" ? "active" : ""}>
             <Link to="/admin">Dashboard</Link>
           </li>
-        )} */}
+        )}
       </ul>
 
       <div className="nav-buttons">
