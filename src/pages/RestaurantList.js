@@ -116,7 +116,7 @@ export default function RestaurantList() {
                   )}
                 </td>
                 <td className="restaurant-name-cell">{restaurant.name}</td>
-                <td>{restaurant.address}</td>
+                <td className="description-cell">{restaurant.address}</td>
                 <td className="description-cell">{restaurant.description}</td>
                 <td>
                   <span className={`status-badge ${Number(restaurant.is_available) === 1 ? 'status-available' : 'status-unavailable'}`}>

@@ -62,12 +62,7 @@ export default function RestaurantCard({ searchTerm = "" }) { // Default to empt
           >
             {restaurant.image ? (
               <img 
-                src={
-                  // Check if the image path is already a full URL (Cloudinary)
-                  restaurant.image.startsWith('http') 
-                    ? restaurant.image 
-                    : `${process.env.REACT_APP_API_URL}/storage/${restaurant.image}`
-                } 
+                src={restaurant.image} 
                 alt={restaurant.name} 
                 className="restaurant-image"
               />

@@ -57,7 +57,7 @@ export default function MemberList() {
 
   const deleteMember = async (id) => {
     if (window.confirm("Are you sure you want to remove this staff member?")) {
-      await fetch(`{process.env.REACT_APP_API_URL}/api/members/${id}`, {
+      await fetch(`${process.env.REACT_APP_API_URL}/api/members/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });

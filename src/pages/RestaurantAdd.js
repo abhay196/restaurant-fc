@@ -26,7 +26,7 @@ export default function RestaurantAdd() {
           setLoading(true);
           const token = localStorage.getItem("token");
 
-          const response = await fetch(`{process.env.REACT_APP_API_URL}/api/restaurant/show/${id}`, {
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/restaurant/show/${id}`, {
             headers: {
               Accept: "application/json",
               Authorization: `Bearer ${token}`,
@@ -75,8 +75,8 @@ export default function RestaurantAdd() {
       const token = localStorage.getItem("token");
 
       const url = isEditMode
-        ? `{process.env.REACT_APP_API_URL}/api/restaurant/edit/${id}`
-        : "{process.env.REACT_APP_API_URL}/api/restaurant/create";
+        ? `${process.env.REACT_APP_API_URL}/api/restaurant/edit/${id}`
+        : `${process.env.REACT_APP_API_URL}/api/restaurant/create`;
 
       const method = isEditMode ? "POST" : "POST";
 

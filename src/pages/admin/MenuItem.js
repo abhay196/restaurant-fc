@@ -120,7 +120,7 @@ export default function MenuList() {
                   )}
                 </td>
                 <td className="restaurant-name-cell">{menu.restaurant_name || menu.restaurant?.name || "N/A"}</td>
-                <td>{menu.item_name}</td>
+                <td className="description-cell">{menu.item_name}</td>
                 <td className="description-cell">{menu.item_description}</td>
                 <td>₹{menu.price}</td>
                 <td>
