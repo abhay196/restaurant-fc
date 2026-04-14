@@ -107,7 +107,7 @@ export default function RestaurantList() {
                   {/* Better Image handling with aspect ratio and fallback */}
                   {restaurant.image ? (
                     <img 
-                      src={`${process.env.REACT_APP_API_URL}/storage/${restaurant.image}`} 
+                      src={restaurant.image} 
                       alt={restaurant.name} 
                       className="restaurant-image" // New class for image styling
                     />
