@@ -1,0 +1,48 @@
+.user-list-container {
+  padding: 40px;
+  background: transparent; /* Let the main dark background show through */
+  min-height: 100vh;
+}
+
+.user-list-container h2 {
+  color: #100f0f; /* Make "User List" visible */
+  margin-bottom: 20px;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff; /* White background for the table body */
+  border-radius: 8px;
+  overflow: hidden; /* Fixes rounded corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.user-table th {
+  background-color: #1a1a1a; /* Darker header */
+  color: #fbf8f8;
+  padding: 15px;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #444;
+}
+
+.user-table td {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  color: #333; /* Dark text so it's visible on white rows */
+  font-size: 14px;
+}
+
+/* Zebra striping for better readability */
+.user-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.user-table tbody tr:hover {
+  background-color: #f1f1f1;
+  transition: 0.3s;
+}

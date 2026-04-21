@@ -5,17 +5,17 @@ import { CartContext } from "../../context/CartContext";
 import Navbar from "./Navbar";
 import "../../css/Menus.css";
 
-const IMAGE_BASE_URL = "http://localhost:8000/storage/";
+// Base URL for your menu images specifically
+const CLOUDINARY_MENU_BASE = "https://res.cloudinary.com/dkwsaccn9/image/upload/v1776707111/";
 
 export default function Menus() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
-  
+
   const [menus, setMenus] = useState([]);
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
-  // Track which specific item is being added
   const [addingItemId, setAddingItemId] = useState(null);
 
   useEffect(() => {
@@ -33,15 +33,25 @@ export default function Menus() {
     fetchMenus();
   }, [id]);
 
+  // Logic to group menus by category name
+  const groupedMenus = menus.reduce((acc, item) => {
+    const categoryName = item.category ? item.category.name : "Other Items";
+    if (!acc[categoryName]) {
+      acc[categoryName] = [];
+    }
+    acc[categoryName].push(item);
+    return acc;
+  }, {});
+
   const handleAddToCart = async (itemId, price) => {
-    setAddingItemId(itemId); // Start loading for this specific item
+    setAddingItemId(itemId);
     try {
       await addToCart(itemId, price);
     } catch (err) {
       console.error("Failed to add item to cart:", err);
       alert("Could not add item. Please try again.");
     } finally {
-      setAddingItemId(null); // Reset after the process is done
+      setAddingItemId(null);
     }
   };
 
@@ -63,9 +73,9 @@ export default function Menus() {
       {restaurant && (
         <div className="restaurant-banner">
           {restaurant.image && (
-            <img 
-              src={`${IMAGE_BASE_URL}${restaurant.image}`} 
-              alt={restaurant.name} 
+            <img
+              src={restaurant.image} /* Already a full URL from your DB */
+              alt={restaurant.name}
               className="banner-img"
             />
           )}
@@ -83,39 +93,55 @@ export default function Menus() {
           </button>
         </div>
 
-        <div className="menu-items-grid">
-          {menus.map((item) => (
-            <div className="menu-card" key={item.id}>
-              <div className="menu-item-image-wrapper">
-                {item.image ? (
-                  <img 
-                    src={`${IMAGE_BASE_URL}${item.image}`} 
-                    alt={item.item_name} 
-                  />
-                ) : (
-                  <div className="item-image-placeholder">
-                    <span>{item.item_name.charAt(0)}</span>
-                  </div>
-                )}
-              </div>
+        {/* Iterate over Categories */}
+        {/* Extract category names, sort them, and ensure "Other Items" is last */}
+        {Object.keys(groupedMenus)
+          .sort((a, b) => {
+            if (a === "Other Items") return 1;  // Move 'Other Items' to the end
+            if (b === "Other Items") return -1; // Keep 'Other Items' at the end
+            return a.localeCompare(b);         // Sort remaining categories alphabetically
+          })
+          .map((categoryName) => (
+            <div key={categoryName} className="category-section">
+              <h2 className="category-title-display">{categoryName}</h2>
               
-              <div className="card-body">
-                <div className="card-title-row">
-                  <h3>{item.item_name}</h3>
-                  <span className="price">₹{item.price}</span>
-                </div>
-                <p className="description">{item.description || "Delicious and prepared fresh to order."}</p>
-                <button
-                  className={`add-to-cart-btn ${addingItemId === item.id ? "adding" : ""}`}
-                  onClick={() => handleAddToCart(item.id, item.price)}
-                  disabled={addingItemId === item.id}
-                >
-                  {addingItemId === item.id ? "Adding..." : "Add to Cart"}
-                </button>
+              <div className="menu-items-grid">
+                {groupedMenus[categoryName].map((item) => (
+                  <div className="menu-card" key={item.id}>
+                    <div className="menu-item-image-wrapper">
+                      {item.image ? (
+                        <img
+                          src={`${CLOUDINARY_MENU_BASE}${item.image}`}
+                          alt={item.item_name}
+                        />
+                      ) : (
+                        <div className="item-image-placeholder">
+                          <span>{item.item_name.charAt(0)}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="card-body">
+                      <div className="card-title-row">
+                        <h3>{item.item_name}</h3>
+                        <span className="price">₹{item.price}</span>
+                      </div>
+                      <p className="description">
+                        {item.item_description || "Delicious and prepared fresh to order."}
+                      </p>
+                      <button
+                        className={`add-to-cart-btn ${addingItemId === item.id ? "adding" : ""}`}
+                        onClick={() => handleAddToCart(item.id, item.price)}
+                        disabled={addingItemId === item.id}
+                      >
+                        {addingItemId === item.id ? "Adding..." : "Add to Cart"}
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
-        </div>
+        ))}
       </div>
     </div>
   );

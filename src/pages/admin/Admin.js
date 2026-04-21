@@ -9,6 +9,8 @@ import OrdersEdit from "../frontend/OrdersEdit";
 import RestaurantAdd from "../RestaurantAdd";
 import MenuItem from "./MenuItem";
 import MenuAdd from "./MenuAdd";
+import Categories from "./Categories";
+import CategoriesAdd from "./CategoriesAdd";
 import MemberList from "./MemberList";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -60,6 +62,9 @@ export default function Admin() {
                 <Route path="menuitems" element={<MenuItem />} />
                 <Route path="menuitems/create" element={<MenuAdd />} />
                 <Route path="menuitems/edit/:id" element={<MenuAdd />} />
+                <Route path="categories" element={<Categories />} />
+                <Route path="categories/create" element={<CategoriesAdd />} />
+                <Route path="categories/edit/:id" element={<CategoriesAdd />} />
               </>
             )}
 

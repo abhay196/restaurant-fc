@@ -15,13 +15,48 @@ export default function MenuAdd() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [restaurantId, setRestaurantId] = useState("");
+  const [categoryId, setCategoryId] = useState("");
   const [restaurants, setRestaurants] = useState([]);
+  const [menus, setMenus] = useState([]);
 
   const navigate = useNavigate();
   const { id } = useParams(); // ✅ Get id from URL
 
   const isEditMode = Boolean(id); // ✅ Determine mode
 
+  const fetchMenus = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/category/${restaurantId}`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+      console.log(data);
+      if (response.ok && data.success) {
+        setMenus(data.categories || []);
+      } else {
+        throw new Error("Failed to categories");
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ Fetch once on mount
+  useEffect(() => {
+    if (restaurantId && restaurants.length > 0) {
+      fetchMenus();
+    };
+  }, [restaurantId, restaurants]);
+  
   // ✅ Fetch restaurant data if editing
   useEffect(() => {
     const fetchRestaurant = async () => {
@@ -56,6 +91,7 @@ export default function MenuAdd() {
 
   useEffect(() => {
     if (restaurantId && restaurants.length > 0) {
+      console.log(restaurantId);
       const selected = restaurants.find((r) => r.id === parseInt(restaurantId));
       if (selected) {
         setType(selected.type || "");
@@ -111,6 +147,7 @@ export default function MenuAdd() {
       formData.append("item_name", item_name);
       formData.append("price", price);
       formData.append("restaurant_id", restaurantId);
+      formData.append("category_id", categoryId);
       formData.append("is_available", isAvailable);
 
     //   formData.append("address", address);
@@ -182,6 +219,7 @@ export default function MenuAdd() {
             </option>
           ))}
         </select>
+
         <input
           type="text"
           placeholder="Menu Item Name"
@@ -204,6 +242,23 @@ export default function MenuAdd() {
           onChange={(e) => setItemDescription(e.target.value)}
           required
         />
+
+        /* --- Change this section in your JSX --- */
+
+        <select
+          value={categoryId} // Fixed: bind to categoryId, not restaurantId
+          onChange={(e) => setCategoryId(e.target.value)} // Ensure this updates categoryId
+          required
+        >
+          <option value="">
+            {menus.length > 0 ? "Select Category" : "Please select restaurant first"}
+          </option>
+          {menus.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
 
         <div className="form-inline-group">
           <select

@@ -36,9 +36,14 @@ export default function Sidebar() {
 
           {/* 🚪 Managers and Super Admin can manage Menu Items */}
           {(user?.role === "super_admin" || user?.role === "manager") && (
-            <li className={location.pathname.includes("/admin/menuitems") ? "active" : ""}>
-              <Link to="/admin/menuitems">🥘 <span>Menu Items</span></Link>
-            </li>
+            <>
+              <li className={location.pathname.includes("/admin/categories") ? "active" : ""}>
+                <Link to="/admin/categories">🥘 <span>Categories</span></Link>
+              </li>
+              <li className={location.pathname.includes("/admin/menuitems") ? "active" : ""}>
+                <Link to="/admin/menuitems">🥘 <span>Menu Items</span></Link>
+              </li>
+            </>
           )}
 
           {/* 📦 Everyone (Admin, Manager, Chef) sees Orders */}

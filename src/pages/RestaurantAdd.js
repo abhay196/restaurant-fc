@@ -73,15 +73,16 @@ export default function RestaurantAdd() {
       if (image) formData.append("image", image);
 
       const token = localStorage.getItem("token");
+      if (isEditMode) {
+          formData.append("_method", "PUT"); 
+      }
 
       const url = isEditMode
         ? `${process.env.REACT_APP_API_URL}/api/restaurant/edit/${id}`
         : `${process.env.REACT_APP_API_URL}/api/restaurant/create`;
 
-      const method = isEditMode ? "POST" : "POST";
-
       const response = await fetch(url, {
-        method,
+        method: "POST",
         body: formData,
         headers: {
           Accept: "application/json",
