@@ -110,9 +110,10 @@ export default function Menus() {
                   <div className="menu-card" key={item.id}>
                     <div className="menu-item-image-wrapper">
                       {item.image ? (
-                        <img
-                          src={`${CLOUDINARY_MENU_BASE}${item.image}`}
-                          alt={item.item_name}
+                        <img 
+                          src={item.image} 
+                          alt={item.item_name} 
+                          className="restaurant-image"
                         />
                       ) : (
                         <div className="item-image-placeholder">
