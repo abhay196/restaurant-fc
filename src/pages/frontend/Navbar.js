@@ -1,129 +1,132 @@
-// src/pages/frontend/Navbar.js
-import React, { useContext, useState, useEffect, useCallback } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import "../../css/Navbar.css";
 import { AuthContext } from "../../context/AuthContext";
-import { FaShoppingCart } from "react-icons/fa";
+import { CartContext } from "../../context/CartContext";
+import { FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
 
 export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { token, logout, user } = useContext(AuthContext);
+  const { cartCount } = useContext(CartContext);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Get token (and logout if available) from AuthContext
-  const { token, logout, user } = useContext(AuthContext || {});
-
-  // Local state for cart count + loading
-  const [count, setCount] = useState(0);
-  const [loadingCount, setLoadingCount] = useState(false);
-
-  // fetch cart count (memoized)
-  const fetchCount = useCallback(async () => {
-    // if no token, reset count and skip request
-    if (!token) {
-      setCount(0);
-      setLoadingCount(false);
-      return;
-    }
-
-    setLoadingCount(true);
-    try {
-      const res = await axios.post("{process.env.REACT_APP_API_URL}/api/cart/count", 
-        {},
-        {   
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-        }
-      );
-
-      // safe read (in case backend returns different shape)
-      const newCount = res?.data?.count ?? 0;
-      // console.log(res)
-      setCount(newCount);
-    } catch (err) {
-      console.error("Failed to fetch cart count:", err);
-      // keep previous count on error (or setCount(0) if you'd prefer)
-    } finally {
-      setLoadingCount(false);
-    }
-  }, [token]);
-
-  // run on mount and whenever token changes
-  useEffect(() => {
-    fetchCount();
-  }, [fetchCount]);
-
-  // Optional: refresh count when route changes (uncomment if you want)
-  // useEffect(() => { fetchCount(); }, [location.pathname, fetchCount]);
-
-  // Handler for logout (if logout exists on context) otherwise navigate to login
   const handleLogout = () => {
-    if (typeof logout === "function") {
-      logout();
-    } else {
-      // fallback: clear token mechanism depends on your app; navigate to login
-      navigate("/login");
-    }
+    setDrawerOpen(false);
+    if (typeof logout === "function") logout();
+    else navigate("/login");
   };
 
+  const navLinks = [
+    { to: "/",        label: "Home"    },
+    { to: "/about",   label: "About"   },
+    { to: "/contact", label: "Contact" },
+    ...(token && user?.role !== "customer"
+      ? [{ to: "/admin", label: "Dashboard" }]
+      : []),
+  ];
+
   return (
-    <nav className="navbar">
-      <div className="nav-logo">
-        <Link to="/">FoodHub</Link>
+    <>
+      <nav className="navbar">
+        {/* Logo */}
+        <div className="nav-logo">
+          <Link to="/">Food<span>Court</span></Link>
+        </div>
+
+        {/* Desktop links */}
+        <ul className="nav-links">
+          {navLinks.map(l => (
+            <li key={l.to} className={location.pathname === l.to ? "active" : ""}>
+              <Link to={l.to}>{l.label}</Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* Right actions */}
+        <div className="nav-buttons">
+          {/* Cart — always visible */}
+          <button className="carticon" onClick={() => navigate("/cart")} aria-label="Cart">
+            <FaShoppingCart className="cartbtn" />
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+          </button>
+
+          {/* Desktop: login / profile+logout */}
+          <div className="nav-auth-desktop">
+            {!token ? (
+              <Link to="/login" className="btn btn-secondary">Login</Link>
+            ) : (
+              <>
+                <Link to="/profile" className="btn btn-secondary">Profile</Link>
+                <button className="btn-logout" onClick={handleLogout}>Logout</button>
+              </>
+            )}
+          </div>
+
+          {/* Mobile: hamburger */}
+          <button
+            className="nav-hamburger"
+            onClick={() => setDrawerOpen(true)}
+            aria-label="Open menu"
+          >
+            <FaBars />
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile drawer overlay */}
+      {drawerOpen && (
+        <div className="nav-drawer-overlay" onClick={() => setDrawerOpen(false)} />
+      )}
+
+      {/* Mobile drawer */}
+      <div className={`nav-drawer${drawerOpen ? " open" : ""}`}>
+        <div className="nav-drawer-header">
+          <div className="nav-logo">
+            <Link to="/" onClick={() => setDrawerOpen(false)}>
+              Food<span>Court</span>
+            </Link>
+          </div>
+          <button className="nav-drawer-close" onClick={() => setDrawerOpen(false)}>
+            <FaTimes />
+          </button>
+        </div>
+
+        <ul className="nav-drawer-links">
+          {navLinks.map(l => (
+            <li key={l.to}>
+              <Link
+                to={l.to}
+                className={location.pathname === l.to ? "active" : ""}
+                onClick={() => setDrawerOpen(false)}
+              >
+                {l.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <div className="nav-drawer-footer">
+          {!token ? (
+            <Link to="/login" className="btn" style={{ width: "100%", justifyContent: "center" }}
+              onClick={() => setDrawerOpen(false)}>
+              Login
+            </Link>
+          ) : (
+            <>
+              <Link to="/profile" className="btn btn-secondary"
+                style={{ width: "100%", justifyContent: "center", marginBottom: "0.75rem" }}
+                onClick={() => setDrawerOpen(false)}>
+                Profile
+              </Link>
+              <button className="btn-logout" style={{ width: "100%" }} onClick={handleLogout}>
+                Logout
+              </button>
+            </>
+          )}
+        </div>
       </div>
-
-      <ul className="nav-links">
-        <li className={location.pathname === "/" ? "active" : ""}>
-          <Link to="/">Home</Link>
-        </li>
-        <li className={location.pathname === "/about" ? "active" : ""}>
-          <Link to="/about">About</Link>
-        </li>
-        <li className={location.pathname === "/contact" ? "active" : ""}>
-          <Link to="/contact">Contact</Link>
-        </li>
-
-        {token && user?.role !== 'customer' && (
-          <li className={location.pathname === "/admin" ? "active" : ""}>
-            <Link to="/admin">Dashboard</Link>
-          </li>
-        )}
-      </ul>
-
-      <div className="nav-buttons">
-        {!token ? (
-          <>
-            <Link to="/login" className="btn">Login</Link>
-            <Link to="/register" className="btn btn-secondary">Register</Link>
-          </>
-        ) : (
-          <>
-            <button
-              className="carticon"
-              onClick={() => {
-                // navigate to cart page
-                navigate("/cart");
-              }}
-              aria-label="Go to cart"
-              title="Cart"
-            >
-              <FaShoppingCart className="cartbtn" />
-              <span className="cart-badge">
-                {loadingCount ? "…" : count}
-              </span>
-            </button>
-
-            <Link to="/profile" className="btn">Profile</Link>
-
-            {/* Logout button */}
-            <button className="btn btn-logout" onClick={handleLogout}>
-              Logout
-            </button>
-          </>
-        )}
-      </div>
-    </nav>
+    </>
   );
 }

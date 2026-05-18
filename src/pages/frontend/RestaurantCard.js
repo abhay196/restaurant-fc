@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "../../css/RestaurantCards.css";
 import { useNavigate } from "react-router-dom";
-import api from "../../api/api"; 
+import api from "../../api/api";
 import SkeletonCard from "../../component/Skeleton";
 
-export default function RestaurantCard({ searchTerm = "" }) { // Default to empty string
+// Emoji fallback based on restaurant type
+const typeEmoji = (type) => {
+  if (type === "veg") return "🥗";
+  if (type === "non_veg") return "🍗";
+  return "🍽️";
+};
+
+export default function RestaurantCard({ searchTerm = "", activeFilter = "All" }) {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -26,13 +33,24 @@ export default function RestaurantCard({ searchTerm = "" }) { // Default to empt
     }
   };
 
-  // The logic to filter the list based on the prop from Home.js
-  const filteredRestaurants = restaurants.filter((restaurant) => {
+  // Filter by search term and active chip filter
+  const filteredRestaurants = restaurants.filter((r) => {
     const searchLower = searchTerm.toLowerCase();
-    const name = (restaurant.name || "").toLowerCase();
-    const address = (restaurant.address || "").toLowerCase();
+    const name = (r.name || "").toLowerCase();
+    const address = (r.address || "").toLowerCase();
+    const matchesSearch = name.includes(searchLower) || address.includes(searchLower);
 
-    return name.includes(searchLower) || address.includes(searchLower);
+    let matchesFilter = true;
+    if (activeFilter === "Veg") {
+      matchesFilter = r.type === "veg";
+    } else if (activeFilter === "Non-Veg") {
+      matchesFilter = r.type === "non_veg";
+    } else if (activeFilter === "Open Now") {
+      matchesFilter = Number(r.is_available) === 1;
+    }
+    // "Top Rated" and "All" show all (you can sort by rating if you have it)
+
+    return matchesSearch && matchesFilter;
   });
 
   const handleCardClick = (id) => {
@@ -48,47 +66,87 @@ export default function RestaurantCard({ searchTerm = "" }) { // Default to empt
       </div>
     );
   }
-  
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+
+  if (error) {
+    return (
+      <div className="no-results">
+        <span>⚠️</span>
+        Could not load restaurants. Please try again.
+      </div>
+    );
+  }
 
   return (
-    <div className="restaurant-cards">
+    <div className="restaurant-grid">
       {filteredRestaurants.length > 0 ? (
-        filteredRestaurants.map((restaurant) => (
-          <div
-            key={restaurant.id}
-            className="restaurant-card"
-            onClick={() => handleCardClick(restaurant.id)}
-          >
-            {restaurant.image ? (
-              <img 
-                src={restaurant.image} 
-                alt={restaurant.name} 
-                className="restaurant-image"
-              />
-            ) : (
-              <div className="image-placeholder">No Image</div>
-            )}
+        filteredRestaurants.map((restaurant) => {
+          const isOpen = Number(restaurant.is_available) === 1;
 
-            <div className="restaurant-info">
-              <h3>{restaurant.name}</h3>
-              <p className="address">{restaurant.address}</p>
+          return (
+            <div
+              key={restaurant.id}
+              className="restaurant-card"
+              onClick={() => handleCardClick(restaurant.id)}
+            >
+              {/* Image / Emoji area */}
+              <div className="restaurant-image-wrapper">
+                {restaurant.image ? (
+                  <img
+                    src={restaurant.image}
+                    alt={restaurant.name}
+                    className="restaurant-image"
+                  />
+                ) : (
+                  <div className="image-placeholder">
+                    {typeEmoji(restaurant.type)}
+                  </div>
+                )}
 
-              <span className="type">
-                {restaurant.type === "veg" ? "Veg" :
-                restaurant.type === "non_veg" ? "Non Veg" : "Both"}
-              </span>
+                {/* Availability badge */}
+                <span className={`avail-badge ${isOpen ? "open" : "closed"}`}>
+                  {isOpen ? "Open" : "Closed"}
+                </span>
 
-              <p className="availability">
-                {Number(restaurant.is_available) === 1
-                  ? "Available ✅"
-                  : "Currently Closed ❌"}
-              </p>
+                {/* Type badge */}
+                <span className="type-badge">
+                  {restaurant.type === "veg"
+                    ? "🥬 Veg"
+                    : restaurant.type === "non_veg"
+                    ? "🍗 Non-Veg"
+                    : "🍽️ Both"}
+                </span>
+              </div>
+
+              {/* Info */}
+              <div className="restaurant-info">
+                <h3>{restaurant.name}</h3>
+
+                <p className="address">{restaurant.address}</p>
+
+                <div className="restaurant-bottom">
+                  <span className="type">
+                    {restaurant.type === "veg"
+                      ? "🥬 Veg"
+                      : restaurant.type === "non_veg"
+                      ? "🍗 Non-Veg"
+                      : "🍽️ Both"}
+                  </span>
+                  <span
+                    className={`availability ${!isOpen ? "closed-text" : ""}`}
+                  >
+                    {isOpen ? "● Open Now" : "● Closed"}
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
-        ))
+          );
+        })
       ) : (
-        <p className="no-results">No restaurants found matching "{searchTerm}"</p>
+        <div className="no-results">
+          <span>🔍</span>
+          No restaurants found
+          {searchTerm ? ` matching "${searchTerm}"` : ""}.
+        </div>
       )}
     </div>
   );

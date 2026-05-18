@@ -1,70 +1,173 @@
-.restaurant-cards {
+/* RestaurantCards.css — FoodCourt Design */
+
+/* ── GRID ── */
+.restaurant-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 1.5rem;
 }
 
-/* CARD */
+/* ── CARD ── */
 .restaurant-card {
-  background: #1e293b;
-  border-radius: 18px;
+  background: white;
+  border-radius: 16px;
   overflow: hidden;
-  transition: 0.3s ease;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid #E8E0D5;
+  cursor: pointer;
+  transition: all 0.25s;
 }
 
 .restaurant-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(255, 140, 66, 0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+  border-color: transparent;
 }
 
-/* IMAGE */
+/* ── IMAGE AREA ── */
+.restaurant-image-wrapper {
+  width: 100%;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  background: #F0EBE3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .restaurant-image {
-  width: 120px;
-  height: 120px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 16px;
   display: block;
-  margin: 20px auto 10px auto; /* THIS centers it */
 }
 
-/* CONTENT */
-.restaurant-info {
-  padding: 20px;
-  text-align: left;
+.image-placeholder {
+  font-size: 5rem;
+  user-select: none;
 }
 
-.restaurant-info h3 {
-  margin: 0 0 8px;
-  font-size: 1.3rem;
+/* Availability badge over image */
+.restaurant-image-wrapper .avail-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.avail-badge.open {
+  background: #5C7A5A;
   color: white;
 }
 
+.avail-badge.closed {
+  background: #D95F4B;
+  color: white;
+}
+
+/* Type badge */
+.restaurant-image-wrapper .type-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  background: #FFF3DC;
+  color: #D4830A;
+  border: 1px solid rgba(212,131,10,0.2);
+}
+
+/* ── INFO AREA ── */
+.restaurant-info {
+  padding: 1.25rem 1.4rem 1.4rem;
+}
+
+.restaurant-info h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1A1814;
+  margin-bottom: 3px;
+  margin-top: 0;
+}
+
 .address {
-  font-size: 0.9rem;
-  color: #94a3b8;
-  margin-bottom: 10px;
+  font-size: 0.83rem;
+  color: #7A6E62;
+  margin-bottom: 0.9rem;
+  line-height: 1.5;
+}
+
+/* ── BOTTOM META ROW ── */
+.restaurant-bottom {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+  color: #7A6E62;
+  padding-top: 0.75rem;
+  border-top: 1px solid #E8E0D5;
 }
 
 .type {
-  display: inline-block;
-  background: rgba(255,255,255,0.08);
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  margin-right: 10px;
-  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #FFF3DC;
+  color: #D4830A;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1px solid rgba(212,131,10,0.2);
 }
 
 .availability {
-  font-size: 0.85rem;
-  margin-top: 8px;
-  color: #e2e8f0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #5C7A5A;
 }
 
-.restaurant-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 340px;
+.availability.closed-text {
+  color: #D95F4B;
+}
+
+/* ── SKELETON ── */
+.restaurant-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ── NO RESULTS ── */
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  font-size: 1rem;
+  color: #7A6E62;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #E8E0D5;
+}
+
+.no-results span {
+  display: block;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .restaurant-grid {
+    grid-template-columns: 1fr;
+  }
 }
