@@ -4,59 +4,52 @@ import { AuthContext } from "./AuthContext";
 
 export const CartContext = createContext();
 
-// ─── helpers for guest localStorage cart ────────────────────────────────────
 const GUEST_CART_KEY = "guest_cart";
 
 export const getGuestCart = () => {
-  try {
-    return JSON.parse(localStorage.getItem(GUEST_CART_KEY)) || [];
-  } catch {
-    return [];
-  }
+  try { return JSON.parse(localStorage.getItem(GUEST_CART_KEY)) || []; }
+  catch { return []; }
 };
+const saveGuestCart = (items) => localStorage.setItem(GUEST_CART_KEY, JSON.stringify(items));
+const clearGuestCart = () => localStorage.removeItem(GUEST_CART_KEY);
 
-const saveGuestCart = (items) => {
-  localStorage.setItem(GUEST_CART_KEY, JSON.stringify(items));
+// Read token directly from localStorage — never from React state
+// This avoids the race where context token is null on first mount
+const getToken = () => {
+  const t = localStorage.getItem("token");
+  return t && t !== "undefined" ? t : null;
 };
-
-const clearGuestCart = () => {
-  localStorage.removeItem(GUEST_CART_KEY);
-};
-// ────────────────────────────────────────────────────────────────────────────
 
 export const CartProvider = ({ children }) => {
-  const { token } = useContext(AuthContext);
+  const { token } = useContext(AuthContext); // used only to react to login/logout changes
   const [cartCount, setCartCount] = useState(0);
 
-  // ── count helpers ──────────────────────────────────────────────────────────
-  const countGuest = useCallback(() => {
-    const items = getGuestCart();
-    return items.reduce((sum, i) => sum + (i.qty || 1), 0);
-  }, []);
-
   const fetchCartCount = useCallback(async () => {
-    if (!token) {
-      setCartCount(countGuest());
+    const tok = getToken(); // always read fresh from localStorage
+    if (!tok) {
+      const items = getGuestCart();
+      setCartCount(items.reduce((s, i) => s + (i.qty || 1), 0));
       return;
     }
     try {
       const res = await api.post("/cart/count");
       setCartCount(res.data.count || 0);
     } catch (err) {
-      console.error("Error fetching cart count", err);
+      // Silently fail — don't log 401 spam on every page load
+      if (err?.response?.status !== 401) {
+        console.error("Error fetching cart count", err);
+      }
     }
-  }, [token, countGuest]);
+  }, []); // no dependencies — always reads fresh from localStorage
 
-  // Re-sync count whenever auth state changes
+  // Re-sync whenever token state changes (login / logout)
   useEffect(() => {
     fetchCartCount();
-  }, [fetchCartCount]);
+  }, [token, fetchCartCount]);
 
-  // ── merge guest cart into server cart after login ─────────────────────────
   const mergeGuestCartToServer = useCallback(async () => {
     const guestItems = getGuestCart();
     if (!guestItems.length) return;
-
     for (const item of guestItems) {
       try {
         await api.post("/cart", {
@@ -73,10 +66,9 @@ export const CartProvider = ({ children }) => {
     await fetchCartCount();
   }, [fetchCartCount]);
 
-  // ── addToCart ─────────────────────────────────────────────────────────────
   const addToCart = async (itemId, price, itemData = {}) => {
-    if (!token) {
-      // Guest: store in localStorage
+    const tok = getToken();
+    if (!tok) {
       const cart = getGuestCart();
       const existing = cart.find((i) => i.item_id === itemId);
       if (existing) {
@@ -97,29 +89,19 @@ export const CartProvider = ({ children }) => {
       setCartCount(cart.reduce((s, i) => s + i.qty, 0));
       return;
     }
-
-    // Logged-in: send to server
-    try {
-      const res = await api.post("/cart", { item_id: itemId, price, qty: 1 });
-      if (res.data.success) {
-        await fetchCartCount();
-      }
-    } catch (err) {
-      throw err;
-    }
+    const res = await api.post("/cart", { item_id: itemId, price, qty: 1 });
+    if (res.data.success) await fetchCartCount();
   };
 
   return (
-    <CartContext.Provider
-      value={{
-        cartCount,
-        fetchCartCount,
-        addToCart,
-        mergeGuestCartToServer,
-        getGuestCart,
-        clearGuestCart: () => { clearGuestCart(); fetchCartCount(); },
-      }}
-    >
+    <CartContext.Provider value={{
+      cartCount,
+      fetchCartCount,
+      addToCart,
+      mergeGuestCartToServer,
+      getGuestCart,
+      clearGuestCart: () => { clearGuestCart(); fetchCartCount(); },
+    }}>
       {children}
     </CartContext.Provider>
   );
