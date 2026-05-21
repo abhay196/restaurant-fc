@@ -143,6 +143,8 @@ html, body, #root {
   gap: 0.75rem;
   overflow-x: auto;
   align-items: center;
+  margin: auto;
+  max-width: 1200px;
   scrollbar-width: none;
 }
 
