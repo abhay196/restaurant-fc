@@ -254,6 +254,10 @@ html, body, #root {
   padding-top: 1rem;
 }
 
+.search-button {
+  width: 100px;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .hero {

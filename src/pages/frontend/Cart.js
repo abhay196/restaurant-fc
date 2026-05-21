@@ -18,13 +18,13 @@ export default function Cart() {
   const fetchCart = async () => {
     setLoading(true);
     try {
-      if (!token) {
+      // if (!token) {
         setItems(getGuestCart());
-      } else {
-        const res = await api.get("/cart");
-        const data = res.data;
-        setItems(Array.isArray(data) ? data : data.data || data.cart_items || []);
-      }
+      // } else {
+      //   const res = await api.get("/cart");
+      //   const data = res.data;
+      //   setItems(Array.isArray(data) ? data : data.data || data.cart_items || []);
+      // }
     } catch (err) {
       console.error(err);
     } finally {
@@ -46,12 +46,12 @@ export default function Cart() {
         <button className="back-btn" onClick={() => navigate(-1)}>← Back</button>
         <h2 className="cart-page-title">Your Order 🛒</h2>
 
-        {!token && (
+        {/* {!token && (
           <div className="cart-guest-banner">
             🛒 Browsing as guest — cart saved locally.{" "}
             <Link to="/login">Login</Link> to save your order.
           </div>
-        )}
+        )} */}
 
         {items.length === 0 ? (
           <div className="cart-empty">
