@@ -6,156 +6,180 @@ export default function MenuAdd() {
   const [item_name, setItemName] = useState("");
   const [item_description, setItemDescription] = useState("");
   const [price, setPrice] = useState("");
-//   const [address, setAddress] = useState("");
-  // const [phone, setPhone] = useState("");
-  // const [description, setDescription] = useState("");
   const [isAvailable, setIsAvailable] = useState("");
   const [type, setType] = useState("");
   const [image, setImage] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
   const [restaurantId, setRestaurantId] = useState("");
   const [categoryId, setCategoryId] = useState("");
+
   const [restaurants, setRestaurants] = useState([]);
   const [menus, setMenus] = useState([]);
 
   const navigate = useNavigate();
-  const { id } = useParams(); // ✅ Get id from URL
+  const { id } = useParams();
 
-  const isEditMode = Boolean(id); // ✅ Determine mode
+  const isEditMode = Boolean(id);
 
-  const fetchMenus = async () => {
+  // =========================
+  // Fetch Categories
+  // =========================
+  const fetchMenus = async (restaurant_id) => {
     try {
-      setLoading(true);
       const token = localStorage.getItem("token");
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/category/${restaurantId}`, {
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-      console.log(data);
-      if (response.ok && data.success) {
-        setMenus(data.categories || []);
-      } else {
-        throw new Error("Failed to categories");
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // ✅ Fetch once on mount
-  useEffect(() => {
-    if (restaurantId && restaurants.length > 0) {
-      fetchMenus();
-    };
-  }, [restaurantId, restaurants]);
-  
-  // ✅ Fetch restaurant data if editing
-  useEffect(() => {
-    const fetchRestaurant = async () => {
-      try {
-        setLoading(true);
-        const token = localStorage.getItem("token");
-
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/restaurants`, {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/category/${restaurant_id}`,
+        {
           headers: {
             Accept: "application/json",
             Authorization: `Bearer ${token}`,
           },
-          credentials: "include",
-        });
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setMenus(data.categories || []);
+      } else {
+        setMenus([]);
+      }
+    } catch (err) {
+      console.error(err);
+      setMenus([]);
+    }
+  };
+
+  // =========================
+  // Fetch Restaurants
+  // =========================
+  useEffect(() => {
+    const fetchRestaurants = async () => {
+      try {
+        setLoading(true);
+
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/restaurants`,
+          {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            credentials: "include",
+          }
+        );
 
         const data = await response.json();
 
         if (response.ok && data.success) {
           setRestaurants(data.data || []);
         } else {
-          setError("Failed to fetch restaurant list.");
+          setError("Failed to fetch restaurants.");
         }
       } catch (err) {
-        setError("An error occurred while fetching data.");
+        setError("Error fetching restaurants.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRestaurant();
-  }, [id]);
+    fetchRestaurants();
+  }, []);
 
+  // =========================
+  // Fetch Categories on Restaurant Change
+  // =========================
   useEffect(() => {
     if (restaurantId && restaurants.length > 0) {
-      console.log(restaurantId);
-      const selected = restaurants.find((r) => r.id === parseInt(restaurantId));
+
+      fetchMenus(restaurantId);
+
+      const selected = restaurants.find(
+        (r) => Number(r.id) === Number(restaurantId)
+      );
+
       if (selected) {
         setType(selected.type || "");
       }
     }
   }, [restaurantId, restaurants]);
 
+  // =========================
+  // Fetch Menu Item for Edit
+  // =========================
   useEffect(() => {
-      if (isEditMode) {
-        const fetchRestaurant = async () => {
-          try {
-            setLoading(true);
-            const token = localStorage.getItem("token");
-  
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/api/menu_items/show/${id}`, {
+    if (isEditMode) {
+      const fetchMenuItem = async () => {
+        try {
+          setLoading(true);
+
+          const token = localStorage.getItem("token");
+
+          const response = await fetch(
+            `${process.env.REACT_APP_API_URL}/api/menu_items/show/${id}`,
+            {
               headers: {
                 Accept: "application/json",
                 Authorization: `Bearer ${token}`,
               },
               credentials: "include",
-            });
-  
-            const data = await response.json();
-  
-            if (response.ok && data.success) {
-              const r = data.data;
-              setItemName(r.item_name || "");
-              setItemDescription(r.item_description || "");
-              setPrice(r.price || "");
-              setRestaurantId(r.restaurant_id || "");
-              setIsAvailable(r.is_available ? "1" : "0");
-            } else {
-              setError("Failed to fetch restaurant details.");
             }
-          } catch (err) {
-            setError("An error occurred while fetching data.");
-          } finally {
-            setLoading(false);
-          }
-        };
-  
-        fetchRestaurant();
-      }
-    }, [id, isEditMode]);
+          );
 
+          const data = await response.json();
+
+          if (response.ok && data.success) {
+            const r = data.data;
+
+            setItemName(r.item_name || "");
+            setItemDescription(r.item_description || "");
+            setPrice(r.price || "");
+            setRestaurantId(r.restaurant_id || "");
+            setCategoryId(r.category_id || "");
+            setIsAvailable(r.is_available ? "1" : "0");
+          } else {
+            setError("Failed to fetch menu item.");
+          }
+        } catch (err) {
+          setError("Error fetching menu item.");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchMenuItem();
+    }
+  }, [id, isEditMode]);
+
+  // =========================
+  // Submit Form
+  // =========================
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setError("");
 
     try {
+      setLoading(true);
+
       const formData = new FormData();
-      formData.append("item_description", item_description);
+
       formData.append("item_name", item_name);
+      formData.append("item_description", item_description);
       formData.append("price", price);
       formData.append("restaurant_id", restaurantId);
       formData.append("category_id", categoryId);
       formData.append("is_available", isAvailable);
-
-    //   formData.append("address", address);
-    //   formData.append("phone", phone);
-    //   formData.append("description", description);
-    //   formData.append("is_available", isAvailable);
       formData.append("type", type);
-      if (image) formData.append("image", image);
+
+      if (image) {
+        formData.append("image", image);
+      }
 
       const token = localStorage.getItem("token");
 
@@ -163,10 +187,8 @@ export default function MenuAdd() {
         ? `${process.env.REACT_APP_API_URL}/api/menu_items/edit/${id}`
         : `${process.env.REACT_APP_API_URL}/api/menu_items/create`;
 
-      const method = isEditMode ? "POST" : "POST"; // If your backend uses PUT/PATCH, update accordingly
-
       const response = await fetch(url, {
-        method,
+        method: "POST",
         body: formData,
         headers: {
           Accept: "application/json",
@@ -180,18 +202,25 @@ export default function MenuAdd() {
       if (response.ok && data.success) {
         navigate("/admin/menuitems");
       } else if (response.status === 422 && data.errors) {
-        const messages = Object.values(data.errors).flat().join(" ");
+        const messages = Object.values(data.errors)
+          .flat()
+          .join(" ");
+
         setError(messages);
       } else {
-        setError(data.message || "Failed to save restaurant. Try again.");
+        setError(data.message || "Failed to save menu item.");
       }
     } catch (err) {
-      setError("An unexpected error occurred. Please try again later.");
-      console.error("Error:", err);
+      console.error(err);
+      setError("Something went wrong.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="restaurant-add-container">
@@ -206,19 +235,26 @@ export default function MenuAdd() {
         className="restaurant-form"
         encType="multipart/form-data"
       >
+        {/* Restaurant */}
 
         <select
           value={restaurantId}
-          onChange={(e) => setRestaurantId(e.target.value)}
+          onChange={(e) => {
+            setRestaurantId(e.target.value);
+            setCategoryId("");
+          }}
           required
         >
           <option value="">Select Restaurant</option>
+
           {restaurants.map((r) => (
             <option key={r.id} value={r.id}>
               {r.name}
             </option>
           ))}
         </select>
+
+        {/* Item Name */}
 
         <input
           type="text"
@@ -228,13 +264,17 @@ export default function MenuAdd() {
           required
         />
 
+        {/* Price */}
+
         <input
-          type="text"
+          type="number"
           placeholder="Price"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
           required
         />
+
+        {/* Description */}
 
         <textarea
           placeholder="Menu Description"
@@ -243,16 +283,19 @@ export default function MenuAdd() {
           required
         />
 
-        /* --- Change this section in your JSX --- */
+        {/* Category */}
 
         <select
-          value={categoryId} // Fixed: bind to categoryId, not restaurantId
-          onChange={(e) => setCategoryId(e.target.value)} // Ensure this updates categoryId
+          value={categoryId}
+          onChange={(e) => setCategoryId(e.target.value)}
           required
         >
           <option value="">
-            {menus.length > 0 ? "Select Category" : "Please select restaurant first"}
+            {menus.length > 0
+              ? "Select Category"
+              : "Please select restaurant first"}
           </option>
+
           {menus.map((cat) => (
             <option key={cat.id} value={cat.id}>
               {cat.name}
@@ -261,15 +304,21 @@ export default function MenuAdd() {
         </select>
 
         <div className="form-inline-group">
+          {/* Availability */}
+
           <select
             value={isAvailable}
             onChange={(e) => setIsAvailable(e.target.value)}
             required
           >
             <option value="">Select Availability</option>
+
             <option value="1">Available</option>
+
             <option value="0">Not Available</option>
           </select>
+
+          {/* Type */}
 
           <select
             value={type}
@@ -277,10 +326,15 @@ export default function MenuAdd() {
             required
           >
             <option value="">Select Type</option>
+
             <option value="veg">Veg</option>
+
             <option value="non_veg">Non-Veg</option>
+
             <option value="both">Both</option>
           </select>
+
+          {/* Image */}
 
           <input
             type="file"
@@ -290,7 +344,7 @@ export default function MenuAdd() {
         </div>
 
         <button type="submit" className="submit-btn">
-          {isEditMode ? "Update Menu item" : "Add Menu item"}
+          {isEditMode ? "Update Menu Item" : "Add Menu Item"}
         </button>
       </form>
     </div>
