@@ -68,7 +68,7 @@ export default function Cart() {
                 <div className="cart-line-item" key={item.id || item.item_id}>
                   {item.image ? (
                     <img
-                      src={`${process.env.REACT_APP_API_URL}/storage/${item.image}`}
+                      src={`${item.image}`}
                       alt={item.item_name}
                       className="cart-line-img"
                     />

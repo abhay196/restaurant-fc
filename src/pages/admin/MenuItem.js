@@ -111,7 +111,7 @@ export default function MenuList() {
                 <td>
                   {menu.image ? (
                     <img 
-                      src={`${process.env.REACT_APP_API_URL}/storage/${menu.image}`} 
+                      src={`${menu.image}`} 
                       alt={menu.item_name} 
                       className="restaurant-image" // New class for image styling
                     />
