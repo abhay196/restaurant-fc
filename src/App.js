@@ -10,6 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 
+import About from "./pages/frontend/About";
+import Contact from "./pages/frontend/Contact";
 import Home from "./pages/frontend/Home";
 import Menus from "./pages/frontend/Menus";
 import Cart from "./pages/frontend/Cart";
@@ -53,6 +55,8 @@ function App() {
           <ToastContainer />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/restaurant/menus/:id" element={<Menus />} />

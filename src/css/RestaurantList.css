@@ -71,8 +71,8 @@
 
 /* --- Image Styling --- */
 .restaurant-image {
-    width:100%; /* Slightly larger image */
-    height: auto;
+    width:auto; /* Slightly larger image */
+    height: 100%;
     border-radius: 8px; /* Rounded corners */
     object-fit: cover;
     border: 1px solid #e0e0e0;
