@@ -1,9 +1,12 @@
 /* Home.css — FoodCourt Design */
 
-html, body, #root {
+html,
+body,
+#root {
   margin: 0;
   padding: 0;
   width: 100%;
+  min-height: 100vh;
   font-family: 'DM Sans', sans-serif;
   background: var(--cream, #FAF7F2);
 }
@@ -230,6 +233,10 @@ html, body, #root {
   text-align: center;
   padding: 2.5rem 2rem;
   margin-top: 4rem;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
 }
 
 .footer-content h2 {
@@ -293,4 +300,15 @@ html, body, #root {
     flex-direction: column;
     gap: 0.5rem;
   }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.home-section,
+.hero,
+.filter-bar,
+.home-footer {
+  width: 100%;
 }
