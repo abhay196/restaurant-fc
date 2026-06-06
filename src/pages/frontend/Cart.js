@@ -9,7 +9,7 @@ import "../../css/Cart.css";
 export default function Cart() {
   const navigate = useNavigate();
   const { token } = useContext(AuthContext);
-  const { getGuestCart, fetchCartCount } = useContext(CartContext);
+  const { getGuestCart, setGuestCart, fetchCartCount } = useContext(CartContext);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,19 +18,33 @@ export default function Cart() {
   const fetchCart = async () => {
     setLoading(true);
     try {
-      // if (!token) {
-        setItems(getGuestCart());
-      // } else {
-      //   const res = await api.get("/cart");
-      //   const data = res.data;
-      //   setItems(Array.isArray(data) ? data : data.data || data.cart_items || []);
-      // }
+      setItems(getGuestCart());
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
+
+  const updateQty = (itemId, delta) => {
+    setItems(prev => {
+      const updated = prev
+        .map(i => (i.id || i.item_id) === itemId ? { ...i, qty: Math.max(0, (i.qty || 1) + delta) } : i)
+        .filter(i => (i.qty || 1) > 0);
+      setGuestCart(updated);   // persist to localStorage / context
+      fetchCartCount();
+      return updated;
+    });
+  };
+
+  // const removeItem = (itemId) => {
+  //   setItems(prev => {
+  //     const updated = prev.filter(i => (i.id || i.item_id) !== itemId);
+  //     setGuestCart(updated);
+  //     fetchCartCount();
+  //     return updated;
+  //   });
+  // };
 
   const subtotal = items.reduce((s, i) => s + Number(i.price) * (i.qty || 1), 0);
   const delivery = items.length ? 29 : 0;
@@ -46,13 +60,6 @@ export default function Cart() {
         <button className="back-btn" onClick={() => navigate(-1)}>← Back</button>
         <h2 className="cart-page-title">Your Order 🛒</h2>
 
-        {/* {!token && (
-          <div className="cart-guest-banner">
-            🛒 Browsing as guest — cart saved locally.{" "}
-            <Link to="/login">Login</Link> to save your order.
-          </div>
-        )} */}
-
         {items.length === 0 ? (
           <div className="cart-empty">
             <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>🛒</div>
@@ -64,29 +71,51 @@ export default function Cart() {
           <div className="cart-page-layout">
             {/* ── LEFT: items ── */}
             <div className="cart-items-col">
-              {items.map((item) => (
-                <div className="cart-line-item" key={item.id || item.item_id}>
-                  {item.image ? (
-                    <img
-                      src={`${item.image}`}
-                      alt={item.item_name}
-                      className="cart-line-img"
-                    />
-                  ) : (
-                    <div className="cart-line-emoji">🍽️</div>
-                  )}
-                  <div className="cart-line-info">
-                    <div className="cart-line-name">{item.item_name}</div>
-                    {item.item_description && (
-                      <div className="cart-line-desc">{item.item_description}</div>
+              {items.map((item) => {
+                const itemId = item.id || item.item_id;
+                return (
+                  <div className="cart-line-item" key={itemId}>
+                    {item.image ? (
+                      <img src={`${item.image}`} alt={item.item_name} className="cart-line-img" />
+                    ) : (
+                      <div className="cart-line-emoji">🍽️</div>
                     )}
-                    <div className="cart-line-price">₹{item.price} × {item.qty || 1}</div>
+
+                    <div className="cart-line-info">
+                      <div className="cart-line-name">{item.item_name}</div>
+                      {item.item_description && (
+                        <div className="cart-line-desc">{item.item_description}</div>
+                      )}
+                      <div className="cart-line-price">₹{item.price} × {item.qty || 1}</div>
+                    </div>
+
+                    {/* ── Qty Controls ── */}
+                    <div className="cart-qty-controls">
+                      <button
+                        className="qty-btn"
+                        onClick={() => updateQty(itemId, -1)}
+                        aria-label="Decrease quantity"
+                      >−</button>
+                      <span className="qty-value">{item.qty || 1}</span>
+                      <button
+                        className="qty-btn"
+                        onClick={() => updateQty(itemId, +1)}
+                        aria-label="Increase quantity"
+                      >+</button>
+                    </div>
+
+                    <div className="cart-line-subtotal">
+                      ₹{(Number(item.price) * (item.qty || 1)).toFixed(2)}
+                    </div>
+
+                    {/* <button
+                      className="cart-remove-btn"
+                      onClick={() => removeItem(itemId)}
+                      aria-label="Remove item"
+                    >🗑</button> */}
                   </div>
-                  <div className="cart-line-subtotal">
-                    ₹{(Number(item.price) * (item.qty || 1)).toFixed(2)}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* ── RIGHT: bill summary ── */}

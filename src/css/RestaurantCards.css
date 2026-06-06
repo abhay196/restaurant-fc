@@ -36,9 +36,9 @@
 }
 
 .restaurant-image {
- height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  width: auto;
   display: block;
 }
 
@@ -47,7 +47,7 @@
   user-select: none;
 }
 
-/* Availability badge over image */
+/* Availability badge */
 .restaurant-image-wrapper .avail-badge {
   position: absolute;
   top: 12px;
@@ -59,15 +59,8 @@
   font-family: 'DM Sans', sans-serif;
 }
 
-.avail-badge.open {
-  background: #5C7A5A;
-  color: white;
-}
-
-.avail-badge.closed {
-  background: #D95F4B;
-  color: white;
-}
+.avail-badge.open   { background: #5C7A5A; color: white; }
+.avail-badge.closed { background: #D95F4B; color: white; }
 
 /* Type badge */
 .restaurant-image-wrapper .type-badge {
@@ -136,9 +129,7 @@
   color: #5C7A5A;
 }
 
-.availability.closed-text {
-  color: #D95F4B;
-}
+.availability.closed-text { color: #D95F4B; }
 
 /* ── SKELETON ── */
 .restaurant-cards {
@@ -165,9 +156,126 @@
   margin-bottom: 1rem;
 }
 
-/* ── RESPONSIVE ── */
+/* ─────────────────────────────────────────
+   MOBILE ≤ 768px — 2-column grid (Style C)
+───────────────────────────────────────── */
 @media (max-width: 768px) {
+
   .restaurant-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+    padding: 0 0.75rem;
+  }
+
+  /* Card: vertical, compact */
+  .restaurant-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    transform: none !important;
+  }
+
+  /* Image: fixed height, full width cover */
+  .restaurant-image-wrapper {
+    width: 100%;
+    height: 110px;
+    flex-shrink: 0;
+  }
+
+  .restaurant-image {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .image-placeholder {
+    font-size: 2.4rem;
+  }
+
+  /* Smaller badges to fit compact cards */
+  .restaurant-image-wrapper .avail-badge {
+    top: 6px;
+    left: 6px;
+    font-size: 0.58rem;
+    padding: 2px 6px;
+  }
+
+  .restaurant-image-wrapper .type-badge {
+    top: 6px;
+    right: 6px;
+    font-size: 0.55rem;
+    padding: 2px 5px;
+  }
+
+  /* Info: tighter padding, flex so bottom row sticks to bottom */
+  .restaurant-info {
+    padding: 8px 10px 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .restaurant-info h3 {
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .address {
+    font-size: 0.7rem;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Bottom meta: stacked vertically, pushed to bottom */
+  .restaurant-bottom {
+    padding-top: 6px;
+    gap: 4px;
+    border-top: 1px solid #F0EBE3;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: auto;
+  }
+
+  .type {
+    font-size: 0.62rem;
+    padding: 2px 6px;
+  }
+
+  .availability {
+    font-size: 0.68rem;
+  }
+
+  /* Skeleton same 2-col */
+  .restaurant-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+    padding: 0 0.75rem;
+  }
+}
+
+/* ── Very small screens < 360px ── */
+@media (max-width: 360px) {
+  .restaurant-grid,
+  .restaurant-cards {
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .restaurant-image-wrapper,
+  .restaurant-image {
+    height: 90px;
+  }
+
+  .restaurant-info h3 {
+    font-size: 0.8rem;
   }
 }

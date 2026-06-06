@@ -203,12 +203,17 @@ body,
   font-size: 1.9rem;
   font-weight: 700;
   color: #1A1814;
+  width: 62%;
 }
 
 .section-subtitle {
   color: #7A6E62;
   font-size: 0.9rem;
   margin-top: 4px;
+}
+
+.left-view {
+  width: 70%;
 }
 
 .view-all-btn {

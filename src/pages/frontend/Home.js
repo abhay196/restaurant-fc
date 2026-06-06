@@ -73,7 +73,7 @@ export default function Home() {
       {/* ── RESTAURANTS ── */}
       <section className="home-section">
         <div className="section-header">
-          <div>
+          <div className="left-view">
             <h2 className="section-title">Popular Restaurants</h2>
             <p className="section-subtitle">
               Explore top-rated restaurants in your food court.

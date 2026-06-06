@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import api from "../../api/api";
 import SkeletonCard from "../../component/Skeleton";
 
-// Emoji fallback based on restaurant type
 const typeEmoji = (type) => {
   if (type === "veg") return "🥗";
   if (type === "non_veg") return "🍗";
@@ -33,7 +32,6 @@ export default function RestaurantCard({ searchTerm = "", activeFilter = "All" }
     }
   };
 
-  // Filter by search term and active chip filter
   const filteredRestaurants = restaurants.filter((r) => {
     const searchLower = searchTerm.toLowerCase();
     const name = (r.name || "").toLowerCase();
@@ -42,13 +40,14 @@ export default function RestaurantCard({ searchTerm = "", activeFilter = "All" }
 
     let matchesFilter = true;
     if (activeFilter === "Veg") {
+      // Veg-only: strict veg restaurants (not "both")
       matchesFilter = r.type === "veg";
     } else if (activeFilter === "Non-Veg") {
-      matchesFilter = r.type === "non_veg";
+      // Non-veg: show non_veg AND both (since they serve non-veg too)
+      matchesFilter = r.type === "non_veg" || r.type === "both";
     } else if (activeFilter === "Open Now") {
       matchesFilter = Number(r.is_available) === 1;
     }
-    // "Top Rated" and "All" show all (you can sort by rating if you have it)
 
     return matchesSearch && matchesFilter;
   });
@@ -102,12 +101,10 @@ export default function RestaurantCard({ searchTerm = "", activeFilter = "All" }
                   </div>
                 )}
 
-                {/* Availability badge */}
                 <span className={`avail-badge ${isOpen ? "open" : "closed"}`}>
                   {isOpen ? "Open" : "Closed"}
                 </span>
 
-                {/* Type badge */}
                 <span className="type-badge">
                   {restaurant.type === "veg"
                     ? "🥬 Veg"
@@ -120,7 +117,6 @@ export default function RestaurantCard({ searchTerm = "", activeFilter = "All" }
               {/* Info */}
               <div className="restaurant-info">
                 <h3>{restaurant.name}</h3>
-
                 <p className="address">{restaurant.address}</p>
 
                 <div className="restaurant-bottom">
@@ -131,9 +127,7 @@ export default function RestaurantCard({ searchTerm = "", activeFilter = "All" }
                       ? "🍗 Non-Veg"
                       : "🍽️ Both"}
                   </span>
-                  <span
-                    className={`availability ${!isOpen ? "closed-text" : ""}`}
-                  >
+                  <span className={`availability ${!isOpen ? "closed-text" : ""}`}>
                     {isOpen ? "● Open Now" : "● Closed"}
                   </span>
                 </div>

@@ -41,14 +41,19 @@ export const CartProvider = ({ children }) => {
     saveGuestCart(cart);
     setCartCount(cart.reduce((s, i) => s + i.qty, 0));
   };
+  const setGuestCart = (items) => {
+    saveGuestCart(items);
+    setCartCount(items.reduce((s, i) => s + (i.qty || 1), 0));
+  };
 
   return (
     <CartContext.Provider value={{
       cartCount,
       fetchCartCount,
       addToCart,
+      setGuestCart,          // ← add this
       getGuestCart,
-      mergeGuestCartToServer: () => {}, // no-op, kept so nothing breaks
+      mergeGuestCartToServer: () => {},
       clearGuestCart: () => { clearGuestCart(); setCartCount(0); },
     }}>
       {children}
