@@ -162,7 +162,8 @@
 @media (max-width: 768px) {
 
   .restaurant-grid {
-    grid-template-columns: repeat(2, 1fr);
+    /* grid-template-columns: repeat(2, 1fr); */
+    grid-template-columns: repeat(2, minmax(158px, 16fr));
     gap: 0.65rem;
     padding: 0 0.75rem;
   }
