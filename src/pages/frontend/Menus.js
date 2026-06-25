@@ -8,7 +8,7 @@ import "../../css/Menus.css";
 export default function Menus() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { addToCart } = useContext(CartContext);
+  const { getGuestCart, addToCart, setGuestCart } = useContext(CartContext);
 
   const [menus, setMenus] = useState([]);
   const [restaurant, setRestaurant] = useState(null);
@@ -16,6 +16,7 @@ export default function Menus() {
   const [addingItemId, setAddingItemId] = useState(null);
   const [activeCategory, setActiveCategory] = useState(null);
   const sectionRefs = useRef({});
+  const [cartItems, setItems] = useState([]);
 
   // ── toast state ──────────────────────────────────────────
   const [toast, setToast] = useState({ msg: "", show: false });
@@ -43,6 +44,21 @@ export default function Menus() {
     fetchMenus();
   }, [id]);
 
+  // ── sync guest cart only on mount / when restaurant changes ──
+  useEffect(() => {
+    setItems(getGuestCart());
+  }, [id]);
+
+  const updateQty = (itemId, delta) => {
+    setItems(prev => {
+      const updated = prev
+        .map(i => (i.id || i.item_id) === itemId ? { ...i, qty: Math.max(0, (i.qty || 1) + delta) } : i)
+        .filter(i => (i.qty || 1) > 0);
+      setGuestCart(updated); // persist to localStorage / context
+      return updated;
+    });
+  };
+
   const groupedMenus = menus.reduce((acc, item) => {
     const categoryName = item.category ? item.category.name : "Other Items";
     if (!acc[categoryName]) acc[categoryName] = [];
@@ -66,6 +82,7 @@ export default function Menus() {
     setAddingItemId(item.id);
     try {
       await addToCart(item.id, item.price, item);
+      setItems(getGuestCart()); // sync local cart state immediately
       showToast(`${item.item_name} added!`);
     } catch (err) {
       console.error("Failed to add item to cart:", err);
@@ -213,35 +230,54 @@ export default function Menus() {
             >
               <div className="menu-section-title">{categoryName}</div>
               <div className="menu-items">
-                {groupedMenus[categoryName].map((item) => (
-                  <div className="menu-card" key={item.id}>
-                    <div className="menu-item-image-wrapper">
-                      {item.image ? (
-                        <img src={item.image} alt={item.item_name} />
-                      ) : (
-                        <div className="item-image-placeholder">
-                          {item.item_name.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                    </div>
-                    <div className="card-body">
-                      <div className="card-title-row">
-                        <h3>{item.item_name}</h3>
-                        <span className="price">₹{item.price}</span>
+                {groupedMenus[categoryName].map((item) => {
+                  const cartItem = cartItems.find((ci) => (ci.id || ci.item_id) === item.id);
+                  return (
+                    <div className="menu-card" key={item.id}>
+                      <div className="menu-item-image-wrapper">
+                        {item.image ? (
+                          <img src={item.image} alt={item.item_name} />
+                        ) : (
+                          <div className="item-image-placeholder">
+                            {item.item_name.charAt(0).toUpperCase()}
+                          </div>
+                        )}
                       </div>
-                      <p className="description">
-                        {item.item_description || "Freshly prepared and delicious."}
-                      </p>
-                      <button
-                        className={`add-to-cart-btn ${addingItemId === item.id ? "adding" : ""}`}
-                        onClick={() => handleAddToCart(item)}
-                        disabled={addingItemId === item.id}
-                      >
-                        {addingItemId === item.id ? "Adding..." : "+ Add to Cart"}
-                      </button>
+                      <div className="card-body">
+                        <div className="card-title-row">
+                          <h3>{item.item_name}</h3>
+                          <span className="price">₹{item.price} x {(cartItem && cartItem.qty > 0) ? cartItem.qty : 1}</span>
+                        </div>
+                        <p className="description">
+                          {item.item_description || "Freshly prepared and delicious."}
+                        </p>
+                        {cartItem && cartItem.qty > 0 ? (
+                          <div className="cart-qty-controls">
+                            <button
+                              className="qty-btn"
+                              onClick={() => updateQty(item.id, +1)}
+                              aria-label="Increase quantity"
+                            >+</button>
+                            <span className="qty-value">{cartItem.qty}</span>
+                            <button
+                              className="qty-btn"
+                              onClick={() => updateQty(item.id, -1)}
+                              aria-label="Decrease quantity"
+                            >−</button>
+                          </div>
+                        ) : (
+                          <button
+                            className={`add-to-cart-btn ${addingItemId === item.id ? "adding" : ""}`}
+                            onClick={() => handleAddToCart(item)}
+                            disabled={addingItemId === item.id}
+                          >
+                            {addingItemId === item.id ? "Adding..." : "+ Add to Cart"}
+                          </button>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))}
