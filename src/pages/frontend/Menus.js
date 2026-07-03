@@ -4,6 +4,7 @@ import api from "../../api/api";
 import { CartContext } from "../../context/CartContext";
 import Navbar from "./Navbar";
 import "../../css/Menus.css";
+import SafeImage from "../../component/SafeImage";
 
 export default function Menus() {
   const { id } = useParams();
@@ -131,7 +132,7 @@ export default function Menus() {
       <div className="restaurant-banner">
         {restaurant?.image ? (
           <>
-            <img src={restaurant.image} alt={restaurant.name} className="banner-img" />
+            <SafeImage src={restaurant.image} alt={restaurant.name} className="banner-img" />
             <div className="banner-overlay">
               <h1>{restaurant?.name}</h1>
               {restaurant?.description && <p>{restaurant.description}</p>}
@@ -235,13 +236,7 @@ export default function Menus() {
                   return (
                     <div className="menu-card" key={item.id}>
                       <div className="menu-item-image-wrapper">
-                        {item.image ? (
-                          <img src={item.image} alt={item.item_name} />
-                        ) : (
-                          <div className="item-image-placeholder">
-                            {item.item_name.charAt(0).toUpperCase()}
-                          </div>
-                        )}
+                        <SafeImage src={item.image} alt={item.item_name} />
                       </div>
                       <div className="card-body">
                         <div className="card-title-row">

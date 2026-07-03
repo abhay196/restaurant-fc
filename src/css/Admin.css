@@ -1,3 +1,538 @@
-.h3 {
-    padding: 40px;
+/* ==========================================================================
+   Admin Panel Unified Style Sheet - Professional Dark Slate & Indigo Theme
+   ========================================================================== */
+
+:root {
+  --bg-main: #0b0f19;
+  --bg-panel: #111827;
+  --bg-card: #1f2937;
+  --bg-input: #111827;
+  --border-color: #374151;
+  --border-focus: #6366f1;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-glow: rgba(99, 102, 241, 0.25);
+
+  --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.15);
+
+  --danger: #ef4444;
+  --danger-bg: rgba(239, 68, 68, 0.15);
+
+  --warning: #fbbf24;
+  --warning-bg: rgba(251, 191, 36, 0.15);
+
+  --info: #38bdf8;
+  --info-bg: rgba(56, 189, 248, 0.15);
+}
+
+/* --- Container Layouts --- */
+.restaurant-list-container,
+.user-list-container,
+.member-list-container {
+  padding: 24px;
+  background-color: var(--bg-main);
+  min-height: calc(100vh - 40px);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+/* --- Loader Styling --- */
+.loader-container {
+  display: flex;
+  height: 100%;
+  min-height: 400px;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-main);
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--border-color);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- Header Section --- */
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 16px;
+}
+
+.list-heading,
+.user-list-container h2,
+.member-list-container h2 {
+  color: var(--text-primary);
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+/* --- Buttons --- */
+.add-restaurant-btn,
+.btn-add,
+.member-form button,
+.submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background-color: var(--primary);
+  color: #ffffff;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2);
+}
+
+.add-restaurant-btn:hover,
+.btn-add:hover,
+.member-form button:hover,
+.submit-btn:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 10px -1px rgba(99, 102, 241, 0.3), 0 0 0 3px var(--primary-glow);
+}
+
+.add-restaurant-btn:active,
+.btn-add:active,
+.member-form button:active,
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.btn-delete {
+  background-color: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-delete:hover {
+  background-color: var(--danger);
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
+/* --- Table Styles --- */
+.restaurant-table,
+.user-table,
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: var(--bg-panel);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  margin-top: 16px;
+}
+
+.restaurant-table th,
+.user-table th,
+.admin-table th {
+  background-color: #1f2937;
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  padding: 14px 20px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.restaurant-table td,
+.user-table td,
+.admin-table td {
+  padding: 14px 20px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.restaurant-table tbody tr:last-child td,
+.user-table tbody tr:last-child td,
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.restaurant-table tbody tr:hover,
+.user-table tbody tr:hover,
+.admin-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+  transition: background-color 0.15s ease;
+}
+
+/* Striping option */
+.user-table tbody tr:nth-child(even),
+.admin-table tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.01);
+}
+
+/* --- Images in Tables --- */
+.restaurant-image {
+  /* width: 50px;
+  height: 50px; */
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-main);
+  display: block;
+}
+
+.image-placeholder {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  background-color: var(--bg-main);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  border: 1px dashed var(--border-color);
+  text-align: center;
+}
+
+.restaurant-name-cell {
+  font-weight: 600;
+  color: var(--primary) !important;
+}
+
+.description-cell {
+  max-width: 240px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-secondary) !important;
+}
+
+/* --- Action Buttons --- */
+.action-cell {
+  width: 100px;
+}
+
+.action-buttons-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-main);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+}
+
+.edit-btn:hover {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+}
+
+.delete-btn:hover {
+  background-color: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
+/* --- Badges --- */
+.status-badge,
+.type-badge,
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  border: 1px solid transparent;
+}
+
+/* Availability Badge */
+.status-available {
+  background-color: var(--success-bg);
+  color: var(--success);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.status-unavailable {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Cuisine / Food Type Badges */
+.type-badge.veg,
+.veg {
+  background-color: var(--success-bg);
+  color: var(--success);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.type-badge.non_veg,
+.non_veg {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.type-badge.both,
+.both {
+  background-color: var(--warning-bg);
+  color: var(--warning);
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+/* Staff Roles */
+.badge.manager {
+  background-color: var(--info-bg);
+  color: var(--info);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.badge.chef {
+  background-color: var(--warning-bg);
+  color: var(--warning);
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+.no-restaurants-message,
+.no-users-message {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+  font-size: 15px;
+  background-color: var(--bg-panel);
+  border: 1px dashed var(--border-color);
+  border-radius: 12px;
+  margin-top: 16px;
+}
+
+/* ==========================================================================
+   Form Styling (Add / Edit Pages)
+   ========================================================================== */
+
+.restaurant-add-container {
+  width: 100%;
+  max-width: 650px;
+  margin: 32px auto;
+  background-color: var(--bg-panel);
+  padding: 36px 40px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  box-sizing: border-box;
+}
+
+.form-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 0;
+  margin-bottom: 24px;
+  letter-spacing: -0.01em;
+}
+
+.error-message {
+  color: var(--danger);
+  background-color: var(--danger-bg);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Forms general */
+.restaurant-form,
+.member-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.restaurant-form input[type="text"],
+.restaurant-form input[type="number"],
+.restaurant-form input[type="email"],
+.restaurant-form input[type="password"],
+.restaurant-form select,
+.restaurant-form textarea,
+.member-form input,
+.member-form select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px 16px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.restaurant-form input::placeholder,
+.restaurant-form textarea::placeholder,
+.member-form input::placeholder {
+  color: var(--text-muted);
+}
+
+.restaurant-form input:focus,
+.restaurant-form select:focus,
+.restaurant-form textarea:focus,
+.member-form input:focus,
+.member-form select:focus {
+  border-color: var(--border-focus);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  background-color: var(--bg-main);
+}
+
+.restaurant-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-inline-group {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.form-inline-group select,
+.form-inline-group input[type="file"] {
+  flex: 1;
+  min-width: 150px;
+}
+
+/* Custom styled file inputs */
+.restaurant-form input[type="file"] {
+  padding: 10px;
+  font-size: 13px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--border-color);
+  cursor: pointer;
+}
+
+/* Inline Staff Form */
+.member-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  background-color: var(--bg-panel);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.member-form button {
+  height: 44px;
+}
+
+/* ==========================================================================
+   Order Edit Card Specifics
+   ========================================================================== */
+.order-edit-card {
+  background-color: var(--bg-panel);
+  padding: 32px;
+  border-radius: 16px;
+  max-width: 600px;
+  margin: 32px auto;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+.order-edit-card p {
+  margin: 0 0 16px 0;
+  font-size: 15px;
+  color: var(--text-primary);
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 12px;
+}
+
+.order-edit-card p:last-of-type {
+  border-bottom: none;
+}
+
+.order-edit-card strong {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.order-edit-card span {
+  font-weight: 600;
+}
+
+.order-status-select {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.2s;
+}
+
+.order-status-select:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--primary-glow);
 }

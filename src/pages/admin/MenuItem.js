@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import "../../css/RestaurantAdd.css";
+import "../../css/Admin.css";
 import { useNavigate } from "react-router-dom";
+import SafeImage from "../../component/SafeImage";
 
 export default function MenuList() {
   const [menus, setMenus] = useState([]);
@@ -70,8 +71,8 @@ export default function MenuList() {
     }
   };
 
-  if (loading) return <p>Loading menu items...</p>;
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+  if (loading) return <div className="loader-container"><div className="loader"></div></div>;
+  if (error) return <div className="restaurant-list-container"><p className="error-message">Error: {error}</p></div>;
 
   return (
     // CLASS NAME CHANGE
@@ -109,15 +110,11 @@ export default function MenuList() {
               <tr key={menu.id}>
                 <td>{index + 1}</td>
                 <td>
-                  {menu.image ? (
-                    <img 
-                      src={`${menu.image}`} 
-                      alt={menu.item_name} 
-                      className="restaurant-image" // New class for image styling
-                    />
-                  ) : (
-                    <div className="image-placeholder">No Image</div>
-                  )}
+                  <SafeImage 
+                    src={menu.image} 
+                    alt={menu.item_name} 
+                    className="restaurant-image"
+                  />
                 </td>
                 <td className="restaurant-name-cell">{menu.restaurant_name || menu.restaurant?.name || "N/A"}</td>
                 <td className="description-cell">{menu.item_name}</td>

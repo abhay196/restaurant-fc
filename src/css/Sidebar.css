@@ -1,18 +1,24 @@
-/* --- Sidebar Container --- */
+/* ==========================================================================
+   Sidebar CSS Styles - Collapsible & Premium Visual Aesthetics
+   ========================================================================== */
+
 .sidebar-container {
   position: relative;
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #1e1e2f;
-  transition: width 0.3s ease;
-  width: 240px;
+  background-color: var(--bg-panel);
+  border-right: 1px solid var(--border-color);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 260px;
   overflow: hidden;
+  box-shadow: 4px 0 15px -3px rgba(0, 0, 0, 0.2);
+  z-index: 10;
 }
 
 /* --- Closed State --- */
 .sidebar-container.closed {
-  width: 70px; /* smaller width for icons only */
+  width: 76px; /* smaller width for icons only */
 }
 
 /* --- Sidebar Inner --- */
@@ -21,23 +27,98 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding: 20px 12px;
+  box-sizing: border-box;
 }
 
 .logo {
   text-align: center;
   font-size: 20px;
-  font-weight: bold;
-  padding: 20px 0;
+  font-weight: 800;
+  padding: 10px 0 20px 0;
+  margin: 0 0 15px 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: opacity 0.3s ease;
-  color: white;
+  transition: opacity 0.2s ease;
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  letter-spacing: -0.03em;
 }
 
 /* Hide logo text when closed */
 .sidebar-container.closed .logo {
   opacity: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  border-bottom: none;
+}
+
+/* --- Sidebar Profile Card --- */
+.sidebar-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-container.closed .sidebar-profile {
+  padding: 8px;
+  justify-content: center;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+  flex-shrink: 0;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar-container.closed .profile-info {
+  opacity: 0;
+  width: 0;
+  display: none;
+}
+
+.profile-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-role {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
 }
 
 /* --- Menu List --- */
@@ -45,65 +126,112 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .sidebar li {
-  margin: 10px 0;
+  margin: 0;
 }
 
-.sidebar a {
-  color: white;
+.sidebar a, 
+.sidebar .logout-link {
+  color: var(--text-secondary);
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
+  gap: 12px;
+  padding: 12px 16px;
   border-radius: 8px;
-  transition: background 0.2s, padding 0.3s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 14px;
+  font-weight: 500;
+  box-sizing: border-box;
 }
 
-.sidebar a:hover {
-  background-color: #33334d;
+.sidebar a:hover,
+.sidebar .logout-link:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  transform: translateX(4px);
 }
 
 .sidebar li.active a {
-  background-color: #4a4a6a;
+  background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+}
+
+.sidebar li.active a:hover {
+  transform: none;
 }
 
 /* Hide link text smoothly when closed */
-.sidebar-container.closed a {
+.sidebar-container.closed a,
+.sidebar-container.closed .logout-link {
   justify-content: center;
-  padding: 10px;
+  padding: 12px;
 }
 
-.sidebar-container.closed a span {
+.sidebar-container.closed a span,
+.sidebar-container.closed .logout-link span {
   display: none;
+}
+
+.sidebar-container.closed a:hover,
+.sidebar-container.closed .logout-link:hover {
+  transform: scale(1.05);
+}
+
+/* --- Logout Button Special Styling --- */
+.logout-link {
+  border: none;
+  background: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+
+.logout-link:hover {
+  color: var(--danger) !important;
+  background-color: var(--danger-bg) !important;
 }
 
 /* --- Toggle Button --- */
 .toggle-btn {
   position: absolute;
-  top: 33px;
-  right: 8px;
-  background: #5353e8;
-  color: white;
-  border: 2px solid #33334d;
-  border-radius: 50%;
+  top: 15px;
+  right: 12px;
+  background: var(--bg-main);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
   cursor: pointer;
-  width: 30px;
-  height: 30px;
-  font-size: 18px;
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: right 0.3s ease, transform 0.3s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.toggle-btn:hover {
+  background-color: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
 }
 
 /* Adjust button position when closed */
 .sidebar-container.closed .toggle-btn {
-  right: 20px;
-  /* transform: rotate(180deg); */
+  position: relative;
+  align-self: center;
+  top: 0;
+  right: 0;
+  margin: 10px 0 20px 0;
 }

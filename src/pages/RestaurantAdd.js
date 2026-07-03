@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../css/RestaurantAdd.css";
+import "../css/Admin.css";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function RestaurantAdd() {
@@ -107,7 +107,7 @@ export default function RestaurantAdd() {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <div className="loader-container"><div className="loader"></div></div>;
 
   return (
     <div className="restaurant-add-container">

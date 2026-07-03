@@ -3,6 +3,7 @@ import "../../css/RestaurantCards.css";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api";
 import SkeletonCard from "../../component/Skeleton";
+import SafeImage from "../../component/SafeImage";
 
 const typeEmoji = (type) => {
   if (type === "veg") return "🥗";
@@ -89,17 +90,11 @@ export default function RestaurantCard({ searchTerm = "", activeFilter = "All" }
             >
               {/* Image / Emoji area */}
               <div className="restaurant-image-wrapper">
-                {restaurant.image ? (
-                  <img
-                    src={restaurant.image}
-                    alt={restaurant.name}
-                    className="restaurant-image"
-                  />
-                ) : (
-                  <div className="image-placeholder">
-                    {typeEmoji(restaurant.type)}
-                  </div>
-                )}
+                <SafeImage
+                  src={restaurant.image}
+                  alt={restaurant.name}
+                  className="restaurant-image"
+                />
 
                 <span className={`avail-badge ${isOpen ? "open" : "closed"}`}>
                   {isOpen ? "Open" : "Closed"}
@@ -116,16 +111,19 @@ export default function RestaurantCard({ searchTerm = "", activeFilter = "All" }
 
               {/* Info */}
               <div className="restaurant-info">
-                <h3>{restaurant.name}</h3>
+                <div className="restaurant-title-row">
+                  <h3>{restaurant.name}</h3>
+                  <span className="rating-badge">4.3 ★</span>
+                </div>
                 <p className="address">{restaurant.address}</p>
 
                 <div className="restaurant-bottom">
-                  <span className="type">
+                  <span className="cuisine-type">
                     {restaurant.type === "veg"
-                      ? "🥬 Veg"
+                      ? "Pure Veg"
                       : restaurant.type === "non_veg"
-                      ? "🍗 Non-Veg"
-                      : "🍽️ Both"}
+                      ? "Non-Veg"
+                      : "Veg & Non-Veg"}
                   </span>
                   <span className={`availability ${!isOpen ? "closed-text" : ""}`}>
                     {isOpen ? "● Open Now" : "● Closed"}

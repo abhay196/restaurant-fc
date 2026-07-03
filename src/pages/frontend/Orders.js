@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../../css/Orders.css"; // Fixed path
+import "../../css/Admin.css"; // Fixed path
 import api from "../../api/api"; // Use centralized API
 import { useNavigate } from "react-router-dom";
 
@@ -24,8 +24,8 @@ function Orders() {
     fetchUsers();
   }, []);
 
-  if (loading) return <p>Loading orders...</p>;
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+  if (loading) return <div className="loader-container"><div className="loader"></div></div>;
+  if (error) return <div className="user-list-container"><p className="error-message">Error: {error}</p></div>;
 
   return (
     <div className="user-list-container">
@@ -43,24 +43,45 @@ function Orders() {
             </tr>
           </thead>
           <tbody>
-            {users.map((user, index) => (
-              <tr key={user.id}>
-                <td>{index + 1}</td>
-                <td>{user.user ? user.user.name : "Unknown User"}</td>
-                <td>{user.user ? user.user.email : "N/A"}</td>
-                <td>{user.status}</td>
-                <td>
-                  <button
-                    className="action-btn edit-btn"
-                    onClick={() => navigate(`/admin/order/${user.id}`)}
-                    title="Edit Order"
-                  >
-                    ✏️
-                  </button> View
-                </td>
-                <td>{user.updated_at ? new Date(user.updated_at).toLocaleString() : "N/A"}</td>
-              </tr>
-            ))}
+            {users.map((user, index) => {
+              const getStatusClass = (status) => {
+                switch (status?.toLowerCase()) {
+                  case "completed":
+                  case "delivered":
+                    return "status-available";
+                  case "pending":
+                    return "both";
+                  case "returned":
+                  default:
+                    return "status-unavailable";
+                }
+              };
+
+              return (
+                <tr key={user.id}>
+                  <td>{index + 1}</td>
+                  <td className="restaurant-name-cell">{user.user ? user.user.name : "Unknown User"}</td>
+                  <td>{user.user ? user.user.email : "N/A"}</td>
+                  <td>
+                    <span className={`status-badge ${getStatusClass(user.status)}`}>
+                      {user.status}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="action-buttons-group">
+                      <button
+                        className="action-btn edit-btn"
+                        onClick={() => navigate(`/admin/order/${user.id}`)}
+                        title="Edit Order"
+                      >
+                        ✏️
+                      </button>
+                    </div>
+                  </td>
+                  <td>{user.updated_at ? new Date(user.updated_at).toLocaleString() : "N/A"}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       ) : (

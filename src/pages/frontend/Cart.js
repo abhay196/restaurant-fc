@@ -5,6 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { CartContext } from "../../context/CartContext";
 import Navbar from "./Navbar";
 import "../../css/Cart.css";
+import SafeImage from "../../component/SafeImage";
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -75,11 +76,7 @@ export default function Cart() {
                 const itemId = item.id || item.item_id;
                 return (
                   <div className="cart-line-item" key={itemId}>
-                    {item.image ? (
-                      <img src={`${item.image}`} alt={item.item_name} className="cart-line-img" />
-                    ) : (
-                      <div className="cart-line-emoji">🍽️</div>
-                    )}
+                    <SafeImage src={item.image} alt={item.item_name} className="cart-line-img" />
 
                     <div className="cart-line-info">
                       <div className="cart-line-name">{item.item_name}</div>

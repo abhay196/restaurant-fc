@@ -13,6 +13,7 @@ import Categories from "./Categories";
 import CategoriesAdd from "./CategoriesAdd";
 import MemberList from "./MemberList";
 import ProtectedRoute from "./ProtectedRoute";
+import "../../css/Admin.css";
 
 
 export default function Admin() {
@@ -25,23 +26,42 @@ export default function Admin() {
         width: "100vw",
         height: "100vh",
         overflow: "hidden",
-        backgroundColor: "#0f172a", // Matches your dark theme from screenshots
-        color: "white"
+        backgroundColor: "var(--bg-main)",
+        color: "var(--text-primary)"
       }}
     >
       <Sidebar />
 
-      <div style={{ flex: 1, padding: "20px", overflowY: "auto" }}>
+      <div style={{ flex: 1, overflowY: "auto" }}>
         <Routes>
           <Route element={<ProtectedRoute />}>
             {/* Dashboard Welcome */}
             <Route index element={
-              <div style={{ padding: "20px" }}>
-                <h2>Welcome, {user?.name || "Admin"}</h2>
-                <p style={{ color: "#94a3b8" }}>
-                  Role: <span style={{ color: "#38bdf8", fontWeight: "bold" }}>{user?.role?.toUpperCase()}</span>
-                  {user?.restaurant_id && ` | Assigned Shop ID: ${user.restaurant_id}`}
-                </p>
+              <div className="restaurant-list-container">
+                <div className="list-header">
+                  <h2 className="list-heading">Dashboard Overview</h2>
+                </div>
+                
+                <div className="restaurant-add-container" style={{ margin: "20px 0", maxWidth: "100%" }}>
+                  <h3 style={{ color: "var(--text-primary)", fontSize: "22px", margin: "0 0 8px 0" }}>
+                    Welcome, {user?.name || "Admin"}!
+                  </h3>
+                  <p style={{ color: "var(--text-secondary)", fontSize: "14px", margin: "0 0 20px 0" }}>
+                    Role: <span className="badge manager" style={{ marginLeft: "5px", textTransform: "uppercase" }}>{user?.role}</span>
+                  </p>
+                  {user?.restaurant_id && (
+                    <div style={{ 
+                      padding: "12px 16px", 
+                      backgroundColor: "var(--bg-main)", 
+                      border: "1px solid var(--border-color)", 
+                      borderRadius: "8px",
+                      display: "inline-block",
+                      fontSize: "14px"
+                    }}>
+                      <strong>Assigned Shop ID:</strong> {user.restaurant_id}
+                    </div>
+                  )}
+                </div>
               </div>
             } />
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import "../css/RestaurantList.css";
+import "../css/Admin.css";
 import { useNavigate } from "react-router-dom";
+import SafeImage from "../component/SafeImage";
 
 export default function RestaurantList() {
   const [restaurants, setRestaurants] = useState([]);
@@ -69,7 +70,7 @@ export default function RestaurantList() {
       <div className="loader"></div>
     </div>
   );
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+  if (error) return <div className="restaurant-list-container"><p className="error-message">Error: {error}</p></div>;
 
   return (
     <div className="restaurant-list-container">
@@ -104,16 +105,11 @@ export default function RestaurantList() {
               <tr key={restaurant.id}>
                 <td>{index + 1}</td>
                 <td>
-                  {/* Better Image handling with aspect ratio and fallback */}
-                  {restaurant.image ? (
-                    <img 
-                      src={restaurant.image} 
-                      alt={restaurant.name} 
-                      className="restaurant-image" // New class for image styling
-                    />
-                  ) : (
-                    <div className="image-placeholder">No Image</div>
-                  )}
+                  <SafeImage 
+                    src={restaurant.image} 
+                    alt={restaurant.name} 
+                    className="restaurant-image"
+                  />
                 </td>
                 <td className="restaurant-name-cell">{restaurant.name}</td>
                 <td className="description-cell">{restaurant.address}</td>

@@ -12,8 +12,24 @@ export default function Sidebar() {
 
   return (
     <div className={`sidebar-container ${isOpen ? "open" : "closed"}`}>
+      <button className="toggle-btn" onClick={toggleSidebar}>
+        {isOpen ? "❮" : "❯"}
+      </button>
       <div className="sidebar">
         <h2 className="logo">Admin Panel</h2>
+        
+        {user && (
+          <div className="sidebar-profile">
+            <div className="profile-avatar">
+              {user.name ? user.name[0].toUpperCase() : "A"}
+            </div>
+            <div className="profile-info">
+              <span className="profile-name">{user.name}</span>
+              <span className="profile-role">{user.role?.replace('_', ' ')}</span>
+            </div>
+          </div>
+        )}
+
         <ul>
           <li className={location.pathname === "/admin" ? "active" : ""}>
             <Link to="/admin">🏠 <span>Dashboard</span></Link>
@@ -52,15 +68,12 @@ export default function Sidebar() {
           </li>
 
           <li>
-            <button onClick={logout} className="logout-link" style={{width: '100%', border: 'none', background: 'none', cursor: 'pointer'}}>
+            <button onClick={logout} className="logout-link">
               🚪 <span>Logout</span>
             </button>
           </li>
         </ul>
       </div>
-      <button className="toggle-btn" onClick={toggleSidebar}>
-        {isOpen ? "❮" : "❯"}
-      </button>
     </div>
   );
 }

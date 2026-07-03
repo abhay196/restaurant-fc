@@ -275,35 +275,80 @@ body,
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .hero {
-    padding: 3.5rem 1.5rem 3rem;
+    padding: 3rem 1rem 2.5rem;
   }
 
   .hero h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 0.95rem;
+    margin-bottom: 1.75rem;
   }
 
   .hero-search {
-    flex-direction: column;
-    border-radius: 16px;
-    padding: 1rem;
+    flex-direction: row;
+    border-radius: 50px;
+    padding: 6px 6px 6px 1rem;
+    max-width: 100%;
+    width: 100%;
+    gap: 6px;
   }
 
   .hero-search input {
-    width: 100%;
+    font-size: 0.85rem;
   }
 
   .hero-search button {
-    width: 100%;
-    text-align: center;
+    width: auto;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
   }
 
   .hero-stats {
-    gap: 1.5rem;
+    gap: 1rem;
+    justify-content: space-around;
+    margin-top: 2rem;
+    width: 100%;
+  }
+
+  .hero-stat .num {
+    font-size: 1.4rem;
+  }
+
+  .hero-stat .lbl {
+    font-size: 0.72rem;
   }
 
   .section-header {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
     gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .left-view {
+    width: auto;
+    flex: 1;
+  }
+
+  .section-title {
+    font-size: 1.4rem;
+    width: 100%;
+    margin-bottom: 2px;
+  }
+
+  .section-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .view-all-btn {
+    font-size: 0.85rem;
+    white-space: nowrap;
+    margin-left: 0.5rem;
   }
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../../css/Categories.css";
+import "../../css/Admin.css";
 import { useNavigate } from "react-router-dom";
 
 export default function Categories() {
@@ -38,8 +38,8 @@ export default function Categories() {
     fetchMenus();
   }, []);
 
-  if (loading) return <p>Loading categories...</p>;
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+  if (loading) return <div className="loader-container"><div className="loader"></div></div>;
+  if (error) return <div className="restaurant-list-container"><p className="error-message">Error: {error}</p></div>;
 
   return (
     // CLASS NAME CHANGE

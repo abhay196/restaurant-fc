@@ -1,11 +1,12 @@
 import React from "react";
+import SafeImage from "./SafeImage";
 
 export default function CartItem({ item }) {
 
    return (
     <div className="cart-item">
-      <img
-        src={`${process.env.REACT_APP_API_URL}/storage/${item.image}`}
+      <SafeImage
+        src={item.image}
         alt={item.item_name}
         className="item-img"
       />

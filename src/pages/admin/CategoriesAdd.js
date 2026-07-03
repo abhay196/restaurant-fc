@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"; // Added useEffect to imports
-import "../../css/RestaurantAdd.css";
+import "../../css/Admin.css";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api";
 

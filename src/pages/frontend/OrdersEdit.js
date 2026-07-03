@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../api/api"; // Ensure this path is correct
-import "../../css/OrdersEdit.css"; 
+import "../../css/Admin.css"; 
 
 function OrdersEdit() {
   const { id } = useParams();
@@ -34,23 +34,27 @@ function OrdersEdit() {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (!order) return <p>Order not found.</p>;
+  if (loading) return <div className="loader-container"><div className="loader"></div></div>;
+  if (!order) return <div className="user-list-container"><p className="error-message">Order not found.</p></div>;
 
   return (
     <div className="user-list-container">
-      <h2 style={{ color: 'white', textAlign: 'center', marginBottom: '20px' }}>
-        Editing Order ID: {id}
-      </h2>
+      <div className="list-header">
+        <h2 className="list-heading">Edit Order Details</h2>
+      </div>
       
       <div className="order-edit-card">
-        <p><strong>Customer:</strong> {order.user?.name || 'N/A'}</p>
-        <p><strong>Item Name:</strong> {order.item_name || 'N/A'}</p>
-        <p><strong>Quantity:</strong> {order.item_qty}</p>
-        <p><strong>Total Price:</strong> <span style={{color: '#28a745', fontWeight: 'bold'}}>₹{order.total_price}</span></p>
+        <h3 style={{ color: 'var(--text-primary)', fontSize: '18px', margin: '0 0 20px 0', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px' }}>
+          Order ID: #{id}
+        </h3>
+        
+        <p><strong>Customer:</strong> <span>{order.user?.name || 'N/A'}</span></p>
+        <p><strong>Item Name:</strong> <span>{order.item_name || 'N/A'}</span></p>
+        <p><strong>Quantity:</strong> <span>{order.item_qty}</span></p>
+        <p><strong>Total Price:</strong> <span style={{color: 'var(--success)'}}>₹{order.total_price}</span></p>
 
-        <div style={{ marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '20px' }}>
-          <label><strong>Order Status:</strong></label>
+        <div style={{ marginTop: '20px', borderTop: '1px solid var(--border-color)', paddingTop: '20px' }}>
+          <label style={{ display: 'block', color: 'var(--text-secondary)', marginBottom: '8px', fontSize: '14px', fontWeight: '500' }}>Order Status</label>
           <select 
             className="order-status-select"
             value={order.status} 

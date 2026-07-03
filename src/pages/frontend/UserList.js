@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../../css/UserList.css"; // Fixed path
+import "../../css/Admin.css"; // Fixed path
 import api from "../../api/api"; // Use centralized API
 
 function UserList() {
@@ -22,8 +22,8 @@ function UserList() {
     fetchUsers();
   }, []);
 
-  if (loading) return <p>Loading users...</p>;
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+  if (loading) return <div className="loader-container"><div className="loader"></div></div>;
+  if (error) return <div className="user-list-container"><p className="error-message">Error: {error}</p></div>;
 
   return (
     <div className="user-list-container">

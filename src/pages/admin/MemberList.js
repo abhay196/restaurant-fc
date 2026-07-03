@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import "../../css/Member.css"; // Use your existing table styles
+import "../../css/Admin.css"; // Use your existing table styles
 
 export default function MemberList() {
   const [members, setMembers] = useState([]);
@@ -67,10 +67,10 @@ export default function MemberList() {
 
   return (
     <div className="member-list-container">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2>Staff Members Management</h2>
+      <div className="list-header">
+        <h2 className="list-heading">Staff Members Management</h2>
         <button onClick={() => setShowForm(!showForm)} className="btn-add">
-          {showForm ? "Close" : "+ Add Staff Member"}
+          {showForm ? "✖️ Close Form" : "➕ Add Staff Member"}
         </button>
       </div>
 
