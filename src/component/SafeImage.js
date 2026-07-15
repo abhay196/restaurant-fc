@@ -1,5 +1,20 @@
 import React, { useState, useEffect } from "react";
 
+const getFoodEmoji = (altText) => {
+  const lower = (altText || "").toLowerCase();
+  if (lower.includes("pizza")) return "🍕";
+  if (lower.includes("burger")) return "🍔";
+  if (lower.includes("water") || lower.includes("drink") || lower.includes("beverage")) return "🥤";
+  if (lower.includes("chaas") || lower.includes("lassi") || lower.includes("milk") || lower.includes("shake")) return "🥛";
+  if (lower.includes("noodle") || lower.includes("pasta") || lower.includes("maggi")) return "🍜";
+  if (lower.includes("rice") || lower.includes("biryani") || lower.includes("pulao")) return "🍚";
+  if (lower.includes("cake") || lower.includes("pastry") || lower.includes("dessert") || lower.includes("sweet")) return "🍰";
+  if (lower.includes("coffee") || lower.includes("tea")) return "☕";
+  if (lower.includes("sandwich") || lower.includes("bread")) return "🥪";
+  if (lower.includes("ice cream")) return "🍦";
+  return "🍽️";
+};
+
 export default function SafeImage({ src: dbSrc, alt, className, style, ...props }) {
   const primaryCloudinaryUrl = "https://res.cloudinary.com/dkwsaccn9/image/upload/v1779563987/menus/phpA2B0_gcwhby.jpg";
   const localBackupUrl = `${process.env.REACT_APP_API_URL || "http://localhost:8000"}/storage/menus/image.png`;
@@ -61,13 +76,30 @@ export default function SafeImage({ src: dbSrc, alt, className, style, ...props 
       setCurrentSrc(localBackupUrl);
       setStep(2);
     } else {
-      // Backup failed, show nothing
+      // Backup failed, show nothing (which now triggers the fallback placeholder render)
       setStep(3);
     }
   };
 
   if (step >= 3) {
-    return null;
+    const emoji = getFoodEmoji(alt);
+    return (
+      <div
+        className={`${className || ""} fallback-image-placeholder`}
+        style={{
+          ...style,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#F0EBE3",
+          color: "#8B7355",
+          fontSize: "2rem"
+        }}
+        {...props}
+      >
+        {emoji}
+      </div>
+    );
   }
 
   return (
